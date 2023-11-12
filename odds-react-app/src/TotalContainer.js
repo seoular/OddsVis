@@ -10,7 +10,7 @@ function TotalContainer() {
   const scrapeData = async (pos) => {
     const sangPProps = new Map();
     var getUrl =
-      "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl";
+      "https://raw.githubusercontent.com/seoular/test/main/footballodds";
     await fetch(getUrl)
       .then((response) => {
         return response;
