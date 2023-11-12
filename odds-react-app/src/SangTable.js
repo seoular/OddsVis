@@ -170,11 +170,7 @@ export default function SangTable(props) {
              }}
            >
              {
-               <div
-                 style={{
-                   marginLeft: "3px"
-                 }}
-               >
+               <div>
                  {x.playerEV.toFixed(2)}
                </div>
              }
