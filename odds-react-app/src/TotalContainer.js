@@ -7,45 +7,11 @@ function TotalContainer() {
   const [selectedPosition, setSelectedPosition] = useState(0);
   const [playerList, setPlayerList] = useState([]);
 
-  const memoizedFetch = (() => {
-    const cache = {};
-
-    return async function memoized(url, options) {
-      const cacheKey = JSON.stringify({ url, options });
-
-      if (cache[cacheKey]) {
-        console.log("Using cached response for", url);
-        return cache[cacheKey];
-      }
-
-      try {
-        const response = await fetch(url, options);
-        const data = await response.json();
-        cache[cacheKey] = data;
-        return data;
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        throw error;
-      }
-    };
-  })();
-
-  // Example usage:
-  // Fetch data from the API and memoize the response
-  // const fetchData = async () => {
-  //   try {
-  //     const data = ;
-  //     console.log('Fetched data:', data);
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // };
-
   const scrapeData = async (pos) => {
     const sangPProps = new Map();
     var getUrl =
-      "https://raw.githubusercontent.com/seoular/test/main/footballodds";
-    await memoizedFetch(getUrl)
+      "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl";
+    await fetch(getUrl)
       .then((response) => {
         return response;
       })
