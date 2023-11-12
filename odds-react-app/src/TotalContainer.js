@@ -12,7 +12,7 @@ function TotalContainer() {
  const scrapeData = async (pos) => {
    const sangPProps = new Map();
    var getUrl =
-     "https://raw.githubusercontent.com/seoular/test/main/footballodds111123";
+     "https://raw.githubusercontent.com/seoular/test/main/sangtest";
    await fetch(getUrl)
      .then((response) => {
        return response.json();
