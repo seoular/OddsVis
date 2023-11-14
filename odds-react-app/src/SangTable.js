@@ -98,8 +98,18 @@ function rainbow(p) {
 
 export default function SangTable(props) {
   const [visList, setVisList] = useState([]);
-  const mapNewVisList = (list) => {
-    let meanAndStdDev = calculateMeanAndStdDev(list.slice(0, 23));
+
+  // console.log(props.espnPlayerMap)
+  const mapNewVisList = (list, espnPlayerMap) => {
+    let meanAndStdDev;
+    // if(list.length < 50){
+    //   meanAndStdDev =  calculateMeanAndStdDev(list.slice(0, 23));
+    // } else{
+      meanAndStdDev =  calculateMeanAndStdDev(list);
+
+    // }
+
+
     let mean = meanAndStdDev.meanValue;
     let stdDev = meanAndStdDev.stddevValue;
 
@@ -110,18 +120,25 @@ export default function SangTable(props) {
         return {
           playerName: d[0],
           playerEV: d[1],
-          calculatedColor: rainbow(100 - percentile)
+          calculatedColor: rainbow(100 - percentile),
+          espnValues: espnPlayerMap.get(d[0])
         };
       })
     );
   };
   useEffect(() => {
-    mapNewVisList(props.evList);
+    mapNewVisList(props.evList, props.espnPlayerMap);
   }, [props.evList]);
   return (
     <div className="SangTable">
       <table style={{}}>
         <tr>
+          <th
+            style={{
+              width: "20px"
+            }}
+          >
+          </th>
           <th
             style={{
               width: "500px"
@@ -136,9 +153,34 @@ export default function SangTable(props) {
           >
             EV
           </th>
+          {/* <th
+            style={{
+              width: "46px"
+            }}
+          >
+            ESPN actual
+          </th>
+          <th
+            style={{
+              width: "46px"
+            }}
+          >
+            ESPN proj
+          </th> */}
         </tr>
-        {visList.map((x) => (
+        {visList.map((x, ix) => (
           <tr>
+            <td 
+            style={{
+              backgroundColor: x.calculatedColor,
+              color: "white",
+              border: "1px solid " + x.calculatedColor,
+              borderRadius: "10px",
+              whiteSpace: "nowrap",              
+              fontSize: ".5rem"
+            }}>
+              {ix+1}
+            </td>
             <td
               style={{
                 backgroundColor: x.calculatedColor,
@@ -170,6 +212,28 @@ export default function SangTable(props) {
             >
               {<div>{x.playerEV.toFixed(2)}</div>}
             </td>
+            {/* <td
+              style={{
+                backgroundColor: x.calculatedColor,
+                color: "white",
+                border: "1px solid " + x.calculatedColor,
+                borderRadius: "10px",
+                width: "100px"
+              }}
+            >
+              {<div>{x.espnValues?.act}</div>}
+            </td>
+            <td
+              style={{
+                backgroundColor: x.calculatedColor,
+                color: "white",
+                border: "1px solid " + x.calculatedColor,
+                borderRadius: "10px",
+                width: "100px"
+              }}
+            >
+              {<div>{x.espnValues?.proj}</div>}
+            </td> */}
           </tr>
         ))}
       </table>
