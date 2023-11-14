@@ -299,8 +299,11 @@ function TotalContainer() {
           </select>
         </div>
         <SangTable  evList={playerList} espnPlayerMap={playerMap} />
-        
+    
       
+      </div>
+      <div class="updateTimeSection" >
+        Last updated Sunday, 11/12 at 5:23 am ET
       </div>
       <div class="patreonSection">
         <div>
