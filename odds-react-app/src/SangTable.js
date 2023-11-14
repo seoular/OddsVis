@@ -91,6 +91,19 @@ function HSVtoRGB(h, s, v) {
   };
 }
 
+function getQueryStringValue(key) {
+  // Get the query string from the current URL
+  const queryString = window.location.search;
+
+  // Create a new URLSearchParams object from the query string
+  const searchParams = new URLSearchParams(queryString);
+
+  // Use the get method to retrieve the value for the specified key
+  const value = searchParams.get(key);
+
+  return value;
+}
+
 function rainbow(p) {
   var rgb = HSVtoRGB((p / 100.0) * 0.85, 1.0, 1.0);
   return "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")";
@@ -104,10 +117,9 @@ export default function SangTable(props) {
     // if(list.length < 50){
     //   meanAndStdDev =  calculateMeanAndStdDev(list.slice(0, 23));
     // } else{
-      meanAndStdDev =  calculateMeanAndStdDev(list);
+    meanAndStdDev = calculateMeanAndStdDev(list);
 
     // }
-
 
     let mean = meanAndStdDev.meanValue;
     let stdDev = meanAndStdDev.stddevValue;
@@ -115,7 +127,6 @@ export default function SangTable(props) {
     setVisList(
       list.map((d) => {
         let percentile = calculatePercentile(mean, stdDev, d[1]) * 100;
-        console.log(percentile)
         return {
           playerName: d[0],
           playerEV: d[1],
@@ -137,8 +148,7 @@ export default function SangTable(props) {
             style={{
               width: "20px"
             }}
-          >
-          </th>
+          ></th>
           <th
             style={{
               width: "500px"
@@ -152,39 +162,46 @@ export default function SangTable(props) {
             }}
           >
             EV
-          </th>
-          {/* <th
-            style={{
-              width: "46px"
-            }}
-          >
-            ESPN actual
-          </th>
-          <th
-            style={{
-              width: "46px"
-            }}
-          >
-            ESPN proj
-          </th> */}
+          </th>          
+          {getQueryStringValue('isPro')=='thanksdude' ? (
+            <>
+              <th
+                style={{
+                  width: "46px"
+                }}
+              >
+                ESPN actual
+              </th>
+              <th
+                style={{
+                  width: "46px"
+                }}
+              >
+                ESPN proj
+              </th>
+            </>
+          ) : <> </>}
         </tr>
         {visList.map((x, ix) => (
           <tr>
-            <td 
-            style={{
-              backgroundColor: x.calculatedColor,
-              color: (x.percentile >72 && x.percentile < 84) ?  "darkgrey" : "white",
-              border: "1px solid " + x.calculatedColor,
-              borderRadius: "10px",
-              whiteSpace: "nowrap",              
-              fontSize: ".5rem"
-            }}>
-              {ix+1}
+            <td
+              style={{
+                backgroundColor: x.calculatedColor,
+                color: 
+                 x.percentile > 75 && x.percentile < 83 ? "darkgrey" : "white",
+                border: "1px solid " + x.calculatedColor,
+                borderRadius: "10px",
+                whiteSpace: "nowrap",
+                fontSize: ".5rem"
+              }}
+            >
+              {ix + 1}
             </td>
             <td
               style={{
                 backgroundColor: x.calculatedColor,
-                color: (x.percentile >72 && x.percentile < 84) ?  "darkgrey" : "white",
+                color: 
+                 x.percentile > 75 && x.percentile < 83 ? "darkgrey" : "white",
                 border: "1px solid " + x.calculatedColor,
                 borderRadius: "10px",
                 whiteSpace: "nowrap",
@@ -204,7 +221,8 @@ export default function SangTable(props) {
             <td
               style={{
                 backgroundColor: x.calculatedColor,
-                color: (x.percentile >72 && x.percentile < 84) ?  "darkgrey" : "white",
+                color: 
+                  x.percentile > 75 && x.percentile < 83 ? "darkgrey" : "white",
                 border: "1px solid " + x.calculatedColor,
                 borderRadius: "10px",
                 width: "100px"
@@ -212,28 +230,33 @@ export default function SangTable(props) {
             >
               {<div>{x.playerEV.toFixed(2)}</div>}
             </td>
-            {/* <td
-              style={{
-                backgroundColor: x.calculatedColor,
-                color: "white",
-                border: "1px solid " + x.calculatedColor,
-                borderRadius: "10px",
-                width: "100px"
-              }}
-            >
-              {<div>{x.espnValues?.act}</div>}
-            </td>
-            <td
-              style={{
-                backgroundColor: x.calculatedColor,
-                color: "white",
-                border: "1px solid " + x.calculatedColor,
-                borderRadius: "10px",
-                width: "100px"
-              }}
-            >
-              {<div>{x.espnValues?.proj}</div>}
-            </td> */}
+            {getQueryStringValue('isPro')=='thanksdude' ? 
+              <>
+                <td
+                  style={{
+                    backgroundColor: x.calculatedColor,
+                    color: x.percentile > 75 && x.percentile < 83 ? "darkgrey" : "white",
+                    border: "1px solid " + x.calculatedColor,
+                    borderRadius: "10px",
+                    width: "100px"
+                  }}
+                >
+                  {<div>{x.espnValues?.act}</div>}
+                </td>
+                <td
+                  style={{
+                    backgroundColor: x.calculatedColor,
+                    color: x.percentile > 75 && x.percentile < 83 ? "darkgrey" : "white",
+                    border: "1px solid " + x.calculatedColor,
+                    borderRadius: "10px",
+                    width: "100px"
+                  }}
+                >
+                  {<div>{x.espnValues?.proj}</div>}
+                </td>
+              </>
+              : <> </>
+            }
           </tr>
         ))}
       </table>
