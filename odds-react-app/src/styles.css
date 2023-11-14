@@ -3,6 +3,11 @@
   text-align: center;
 }
 
+.updateTimeSection{  
+  width: 350px;
+  margin-left: 50px;
+  font-size: .82rem;
+}
 .patreonSection{
   margin-top: 42px;
   width: 350px;
