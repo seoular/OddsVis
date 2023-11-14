@@ -98,7 +98,6 @@ function rainbow(p) {
 
 export default function SangTable(props) {
   const [visList, setVisList] = useState([]);
-
   // console.log(props.espnPlayerMap)
   const mapNewVisList = (list, espnPlayerMap) => {
     let meanAndStdDev;
@@ -116,12 +115,13 @@ export default function SangTable(props) {
     setVisList(
       list.map((d) => {
         let percentile = calculatePercentile(mean, stdDev, d[1]) * 100;
-
+        console.log(percentile)
         return {
           playerName: d[0],
           playerEV: d[1],
           calculatedColor: rainbow(100 - percentile),
-          espnValues: espnPlayerMap.get(d[0])
+          espnValues: espnPlayerMap.get(d[0]),
+          percentile: percentile
         };
       })
     );
@@ -173,7 +173,7 @@ export default function SangTable(props) {
             <td 
             style={{
               backgroundColor: x.calculatedColor,
-              color: "white",
+              color: (x.percentile >72 && x.percentile < 84) ?  "darkgrey" : "white",
               border: "1px solid " + x.calculatedColor,
               borderRadius: "10px",
               whiteSpace: "nowrap",              
@@ -184,7 +184,7 @@ export default function SangTable(props) {
             <td
               style={{
                 backgroundColor: x.calculatedColor,
-                color: "white",
+                color: (x.percentile >72 && x.percentile < 84) ?  "darkgrey" : "white",
                 border: "1px solid " + x.calculatedColor,
                 borderRadius: "10px",
                 whiteSpace: "nowrap",
@@ -204,7 +204,7 @@ export default function SangTable(props) {
             <td
               style={{
                 backgroundColor: x.calculatedColor,
-                color: "white",
+                color: (x.percentile >72 && x.percentile < 84) ?  "darkgrey" : "white",
                 border: "1px solid " + x.calculatedColor,
                 borderRadius: "10px",
                 width: "100px"
