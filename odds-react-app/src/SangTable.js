@@ -161,7 +161,7 @@ export default function SangTable(props) {
               width: "46px"
             }}
           >
-            EV
+            Week 10 EV
           </th>          
           {getQueryStringValue('isPro')=='thanksdude' ? (
             <>
