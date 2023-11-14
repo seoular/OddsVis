@@ -24,7 +24,7 @@ function TotalContainer() {
 
   const scrapeEspnStats = async () => {
     const getUrl =
-      "https://raw.githubusercontent.com/seoular/test/main/actualESPNStats.json";
+      "https://raw.githubusercontent.com/seoular/test/main/latestEspnNumbers";
     
 
     await fetch(getUrl)
