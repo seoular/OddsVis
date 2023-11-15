@@ -272,7 +272,7 @@ function TotalContainer() {
     <div>
       <div>    
         <div style={{display:'flex', marginLeft: '20px', marginBottom:'5px', marginTop:'15px'}}>           
-           Week 10
+           Week 10 FF Projections Powered by Vegas Player Props
         </div>   
         <div style={{display:'flex'}}>
           <select
