@@ -270,7 +270,10 @@ function TotalContainer() {
 
   return (
     <div>
-      <div>
+      <div>    
+        <div style={{display:'flex', marginLeft: '20px', marginBottom:'5px', marginTop:'15px'}}>           
+           Week 10
+        </div>   
         <div style={{display:'flex'}}>
           <select
             defaultValue={selectedPosition}
