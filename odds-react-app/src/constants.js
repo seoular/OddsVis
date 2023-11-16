@@ -218,7 +218,16 @@ const Positions = {
   ["Ray-Ray McCloud", Positions.WR],
   ["Dalvin Cook", Positions.RB],
   ["Michael Carter", Positions.RB],
-  ["Josh Oliver", Positions.TE]
+  ["Josh Oliver", Positions.TE],
+  ["Ja'Marr Chase", Positions.WR],
+  ["Tyler Boyd", Positions.WR], 
+  ["Trenton Irwin", Positions.WR],
+  ["A.J. Brown ", Positions.WR],
+  ["DeVonta Smith", Positions.WR],
+  ["Rashee Rice", Positions.WR],
+  // need to add chiefs and dolphins players / week 10 byes
+
+
  ]);
  // [
  //   "Deven Thompkins",
