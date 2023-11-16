@@ -343,7 +343,7 @@ function TotalContainer() {
           (x) =>
             typeof PlayerPosMap.get(x[0]) !== "undefined" &&
             (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
-            x[1] > 5
+            x[1] > 6
         );
 
         setPlayerDPCountMap(dpCountMap)
