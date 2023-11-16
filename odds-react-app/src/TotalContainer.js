@@ -19,13 +19,14 @@ const slotcodes = {
 function TotalContainer() {
   const [selectedPosition, setSelectedPosition] = useState(0);
   const [playerList, setPlayerList] = useState([]);
+  const [playerDPCountMap, setPlayerDPCountMap] = useState(new Map())
   const [playerMap, setPlayerMap] = useState(new Map())
   const [selectedMode, setSelectedMode] = useState(0);
+  const [selectedWeek, setSelectedWeek] = useState(11);
 
-  const scrapeEspnStats = async () => {
+  const scrapeEspnStats = async (week) => {
     const getUrl =
-      "https://raw.githubusercontent.com/seoular/test/main/latestEspnNumbers";
-    
+      "https://raw.githubusercontent.com/seoular/OddsVis/main/ESPNAPIFiles/week" + week + "hppr";
 
     await fetch(getUrl)
       .then((response) => {
@@ -87,12 +88,15 @@ function TotalContainer() {
 
         // // Assuming you are using this in a browser environment with access to the console
         // console.table(data); // Display data in a tabular format in the console
+      }).catch((e) => {
+        playerMap.clear()
       });
     setPlayerMap(playerMap)
   };
 
-  const scrapeData = async (pos, mode) => {
+  const scrapeData = async (pos, mode, week) => {
     const sangPProps = new Map();
+    const dpCountMap = new Map();
 
     let receptionMultiplier = .5;
 
@@ -104,7 +108,8 @@ function TotalContainer() {
     else if (mode == 2)
       receptionMultiplier = 1;
 
-    var getUrl = "https://raw.githubusercontent.com/seoular/test/main/sangtest";
+      //https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl
+    var getUrl = 'https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week;
     await fetch(getUrl)
       .then((response) => {
         return response.json();
@@ -141,11 +146,21 @@ function TotalContainer() {
           if (typeof eachGameTDOutcomes !== "undefined") {
             for (let j = 0; j < eachGameTDOutcomes.length; j++) {
               let playerOdds = eachGameTDOutcomes[j];
-              // get formula right later
+            
+              let correctedPlayerName = playerOdds.description;
+              //hacked fixed player list
+              if (correctedPlayerName == 'Amon-Ra St.Brown'){
+                correctedPlayerName = 'Amon-Ra St. Brown'
+              }
               sangPProps.set(
-                playerOdds.description,
+                correctedPlayerName,
                 (1 / playerOdds.price.decimal) * 6
               );
+
+              dpCountMap.set(
+                correctedPlayerName,
+                1
+              )
             }
           }
           if (typeof eachGameRushingOutcomes !== "undefined") {
@@ -156,10 +171,27 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
+              
+              let correctedPlayerName = name;
+              //hacked fixed player list
+              if (correctedPlayerName == 'Amon-Ra St.Brown'){
+                correctedPlayerName = 'Amon-Ra St. Brown'
+              }
+
               sangPProps.set(
-                name,
+                correctedPlayerName,
                 temp + playerOdds.outcomes[0].price.handicap / 10
-              );
+              );             
+
+              let tempCount = dpCountMap.get(correctedPlayerName);
+              if( typeof tempCount == "undefined"){
+                tempCount = 0;
+              }
+
+              dpCountMap.set(
+                correctedPlayerName,
+                tempCount + 1
+              )
             }
           }
           if (typeof eachGameReceivingOutcomes !== "undefined") {
@@ -170,10 +202,25 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
+              let correctedPlayerName = name;
+              //hacked fixed player list
+              if (correctedPlayerName == 'Amon-Ra St.Brown'){
+                correctedPlayerName = 'Amon-Ra St. Brown'
+              }
               sangPProps.set(
-                name,
+                correctedPlayerName,
                 temp + playerOdds.outcomes[0].price.handicap / 10
               );
+
+              let tempCount = dpCountMap.get(correctedPlayerName);
+              if( typeof tempCount == "undefined"){
+                tempCount = 0;
+              }
+
+              dpCountMap.set(
+                correctedPlayerName,
+                tempCount + 1
+              )
             }
           }
           if (typeof eachGameReceptionOutcomes !== "undefined") {
@@ -184,11 +231,26 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
+              let correctedPlayerName = name;
+              //hacked fixed player list
+              if (correctedPlayerName == 'Amon-Ra St.Brown'){
+                correctedPlayerName = 'Amon-Ra St. Brown'
+              }
               // console.log('name ' + name + ' ' + temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier)
               sangPProps.set(
-                name,
+                correctedPlayerName,
                 temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier
               );
+
+              let tempCount = dpCountMap.get(correctedPlayerName);
+              if( typeof tempCount == "undefined"){
+                tempCount = 0;
+              }
+
+              dpCountMap.set(
+                correctedPlayerName,
+                tempCount + 1
+              )
             }
           }
           if (typeof eachGamePassingYdOutcomes !== "undefined") {
@@ -199,10 +261,25 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
+              let correctedPlayerName = name;
+              //hacked fixed player list
+              if (correctedPlayerName == 'Amon-Ra St.Brown'){
+                correctedPlayerName = 'Amon-Ra St. Brown'
+              }
               sangPProps.set(
-                name,
+                correctedPlayerName,
                 temp + playerOdds.outcomes[0].price.handicap / 25
               );
+
+              let tempCount = dpCountMap.get(correctedPlayerName);
+              if( typeof tempCount == "undefined"){
+                tempCount = 0;
+              }
+
+              dpCountMap.set(
+                correctedPlayerName,
+                tempCount + 1
+              )
             }
           }
           if (typeof eachGamePassingTDOutcomes !== "undefined") {
@@ -213,10 +290,25 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
+              let correctedPlayerName = name;
+              //hacked fixed player list
+              if (correctedPlayerName == 'Amon-Ra St.Brown'){
+                correctedPlayerName = 'Amon-Ra St. Brown'
+              }
               sangPProps.set(
-                name,
+                correctedPlayerName,
                 temp + playerOdds.outcomes[0].price.handicap * 4
               );
+
+              let tempCount = dpCountMap.get(correctedPlayerName);
+              if( typeof tempCount == "undefined"){
+                tempCount = 0;
+              }
+
+              dpCountMap.set(
+                correctedPlayerName,
+                tempCount + 1
+              )
             }
           }
           if (typeof eachGameIntOutcomes !== "undefined") {
@@ -227,13 +319,20 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
+              let correctedPlayerName = name;
+              //hacked fixed player list
+              if (correctedPlayerName == 'Amon-Ra St.Brown'){
+                correctedPlayerName = 'Amon-Ra St. Brown'
+              }
               sangPProps.set(
-                name,
+                correctedPlayerName,
                 temp + playerOdds.outcomes[0].price.handicap * -2
               );
             }
           }
         }
+
+        // console.log(Array.from(dpCountMap.entries()).sort((a, b) => b[1] - a[1]))
 
         const mapEntries = Array.from(sangPProps.entries());
         // Sort the array based on the numeric value (assuming values are numbers)
@@ -247,8 +346,9 @@ function TotalContainer() {
             x[1] > 5
         );
 
+        setPlayerDPCountMap(dpCountMap)
         setPlayerList(finalList);
-        return finalList;
+        // return finalList;
       });
     // .catch((err) => {
     //   return [];
@@ -257,11 +357,11 @@ function TotalContainer() {
   };
 
   useEffect(() => {
-    scrapeEspnStats()
-  }, [])
+    scrapeEspnStats(selectedWeek)
+  }, [selectedWeek])
   useEffect(() => {
-    scrapeData(selectedPosition, selectedMode).catch(console.error);
-  }, [selectedPosition, selectedMode]); 
+    scrapeData(selectedPosition, selectedMode, selectedWeek).catch(console.error);
+  }, [selectedPosition, selectedMode, selectedWeek]); 
   
 
   const redirectToPatreon = () => {
@@ -272,7 +372,7 @@ function TotalContainer() {
     <div>
       <div>    
         <div style={{display:'flex', marginLeft: '20px', marginBottom:'5px', marginTop:'15px'}}>           
-           Week 10 Fantasy Football Projections Powered by Vegas Player Props
+           Fantasy Football Projections Powered by Vegas Player Props
         </div>   
         <div style={{display:'flex'}}>
           <select
@@ -300,8 +400,18 @@ function TotalContainer() {
             <option value="1">Standard</option>
             <option value="2">Full PPR</option>
           </select>
+          <select
+            defaultValue={selectedWeek}
+            onChange={(e) => {
+              setSelectedWeek(parseInt(e.target.value));
+            }}
+            style={{ display: "flex", marginLeft: "20px" }}
+          >
+            <option value="11">Week 11</option>
+            <option value="10">Week 10</option>
+          </select>
         </div>
-        <SangTable  evList={playerList} espnPlayerMap={playerMap} />
+        <SangTable  evList={playerList} espnPlayerMap={playerMap} dpCountMap={playerDPCountMap} />
     
       
       </div>
