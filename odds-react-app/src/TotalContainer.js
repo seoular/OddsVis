@@ -144,113 +144,136 @@ function TotalContainer() {
             .find((x) => x.id == "100-1188")
             ?.markets.filter((y) => y.marketTypeId == "121329");
           if (typeof eachGameTDOutcomes !== "undefined") {
+            let amonRaFlag = false;
             for (let j = 0; j < eachGameTDOutcomes.length; j++) {
               let playerOdds = eachGameTDOutcomes[j];
-            
-              let correctedPlayerName = playerOdds.description;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              sangPProps.set(
-                correctedPlayerName,
-                (1 / playerOdds.price.decimal) * 6
-              );
 
-              dpCountMap.set(
-                correctedPlayerName,
-                1
-              )
+              if(playerOdds.description == 'Amon-Ra St.Brown'  || playerOdds.description == 'Amon-Ra St. Brown'){
+                playerOdds.description = 'Amon-Ra St. Brown'
+                // console.log((1 / playerOdds.price.decimal) * 6)
+              }
+              if( !amonRaFlag ) {
+                sangPProps.set(
+                  playerOdds.description,
+                  (1 / playerOdds.price.decimal) * 6
+                );
+  
+                dpCountMap.set(
+                  playerOdds.description,
+                  1
+                )
+              }
+
+              if (name == 'Amon-Ra St. Brown'){
+                amonRaFlag = true;
+              }
+              
             }
           }
           if (typeof eachGameRushingOutcomes !== "undefined") {
+            let amonRaFlag = false;
             for (let j = 0; j < eachGameRushingOutcomes.length; j++) {
               let playerOdds = eachGameRushingOutcomes[j];
               let name = playerOdds.description.slice(22);
+              if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
+                name = 'Amon-Ra St. Brown'
+              }
               let temp = sangPProps.get(name);
               if (typeof temp == "undefined") {
                 temp = 0;
-              }
-              
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
+              } 
+              if( !amonRaFlag ) {
+                sangPProps.set(
+                  name,
+                  temp + playerOdds.outcomes[0].price.handicap / 10
+                );             
 
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap / 10
-              );             
+                let tempCount = dpCountMap.get(name);
+                if( typeof tempCount == "undefined"){
+                  tempCount = 0;
+                }
 
-              let tempCount = dpCountMap.get(correctedPlayerName);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
+                dpCountMap.set(
+                  name,
+                  tempCount + 1
+                )
               }
-
-              dpCountMap.set(
-                correctedPlayerName,
-                tempCount + 1
-              )
+              if (name == 'Amon-Ra St. Brown'){
+                amonRaFlag = true;
+              }
             }
           }
           if (typeof eachGameReceivingOutcomes !== "undefined") {
+            let amonRaFlag = false;
             for (let j = 0; j < eachGameReceivingOutcomes.length; j++) {
               let playerOdds = eachGameReceivingOutcomes[j];
               let name = playerOdds.description.slice(24);
+              if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
+                name = 'Amon-Ra St. Brown'
+                // console.log(playerOdds.outcomes[0].price.handicap / 10)
+              }
               let temp = sangPProps.get(name);
               if (typeof temp == "undefined") {
                 temp = 0;
               }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap / 10
-              );
+              if( !amonRaFlag ) {
+              
+                sangPProps.set(
+                  name,
+                  temp + playerOdds.outcomes[0].price.handicap / 10
+                );
 
-              let tempCount = dpCountMap.get(correctedPlayerName);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
-              }
+                let tempCount = dpCountMap.get(name);
+                if( typeof tempCount == "undefined"){
+                  tempCount = 0;
+                }
 
-              dpCountMap.set(
-                correctedPlayerName,
-                tempCount + 1
-              )
+                dpCountMap.set(
+                  name,
+                  tempCount + 1
+                )
+              }
+              if (name == 'Amon-Ra St. Brown'){
+                amonRaFlag = true;
+              }
             }
           }
           if (typeof eachGameReceptionOutcomes !== "undefined") {
+            let amonRaFlag = false;
+
             for (let j = 0; j < eachGameReceptionOutcomes.length; j++) {
               let playerOdds = eachGameReceptionOutcomes[j];
               let name = playerOdds.description.slice(19);
+              if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
+                name = 'Amon-Ra St. Brown'
+                // console.log(playerOdds.outcomes[0].price.handicap * receptionMultiplier)
+              } 
               let temp = sangPProps.get(name);
+
               if (typeof temp == "undefined") {
                 temp = 0;
               }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              // console.log('name ' + name + ' ' + temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier)
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier
-              );
+              if( !amonRaFlag ) {
 
-              let tempCount = dpCountMap.get(correctedPlayerName);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
+                sangPProps.set(
+                  name,
+                  temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier
+                );
+
+                let tempCount = dpCountMap.get(name);
+                if( typeof tempCount == "undefined"){
+                  tempCount = 0;
+                }
+
+                dpCountMap.set(
+                  name,
+                  tempCount + 1
+                )
               }
 
-              dpCountMap.set(
-                correctedPlayerName,
-                tempCount + 1
-              )
+              if (name == 'Amon-Ra St. Brown'){                
+                amonRaFlag = true;
+              }
             }
           }
           if (typeof eachGamePassingYdOutcomes !== "undefined") {
@@ -261,23 +284,19 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
+
               sangPProps.set(
-                correctedPlayerName,
+                name,
                 temp + playerOdds.outcomes[0].price.handicap / 25
               );
 
-              let tempCount = dpCountMap.get(correctedPlayerName);
+              let tempCount = dpCountMap.get(name);
               if( typeof tempCount == "undefined"){
                 tempCount = 0;
               }
 
               dpCountMap.set(
-                correctedPlayerName,
+                name,
                 tempCount + 1
               )
             }
@@ -290,23 +309,19 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
+
               sangPProps.set(
-                correctedPlayerName,
+                name,
                 temp + playerOdds.outcomes[0].price.handicap * 4
               );
 
-              let tempCount = dpCountMap.get(correctedPlayerName);
+              let tempCount = dpCountMap.get(name);
               if( typeof tempCount == "undefined"){
                 tempCount = 0;
               }
 
               dpCountMap.set(
-                correctedPlayerName,
+                name,
                 tempCount + 1
               )
             }
@@ -319,13 +334,9 @@ function TotalContainer() {
               if (typeof temp == "undefined") {
                 temp = 0;
               }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
+
               sangPProps.set(
-                correctedPlayerName,
+                name,
                 temp + playerOdds.outcomes[0].price.handicap * -2
               );
             }
@@ -333,6 +344,7 @@ function TotalContainer() {
         }
 
         // console.log(Array.from(dpCountMap.entries()).sort((a, b) => b[1] - a[1]))
+        // console.log(Array.from(sangPProps.entries()).sort((a, b) => b[1] - a[1]))
 
         const mapEntries = Array.from(sangPProps.entries());
         // Sort the array based on the numeric value (assuming values are numbers)
@@ -343,7 +355,7 @@ function TotalContainer() {
           (x) =>
             typeof PlayerPosMap.get(x[0]) !== "undefined" &&
             (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
-            x[1] > 6
+            x[1] > 5
         );
 
         setPlayerDPCountMap(dpCountMap)
