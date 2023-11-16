@@ -146,7 +146,10 @@ export default function SangTable(props) {
     );
   };
   useEffect(() => {
-    mapNewVisList(props.evList, props.espnPlayerMap);
+    let filteredEvList = props.evList.filter((d) => 
+      props.dpCountMap.get(d[0]) >= 3
+    )
+    mapNewVisList(filteredEvList, props.espnPlayerMap);
   }, [props.evList]);
   return (
     <div className="SangTable">
@@ -239,7 +242,8 @@ export default function SangTable(props) {
               }}
             >
               {<div>{x.playerEV.toFixed(2)}</div>}
-            </td>
+            </td>            
+            {/* {true ?  */}
             {getQueryStringValue('isPro')=='thanksdude' ? 
               <>
                 <td
