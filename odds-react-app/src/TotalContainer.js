@@ -1,431 +1,279 @@
 import "./styles.css";
 import React, { useState, useEffect } from "react";
-import { PlayerPosMap } from "./constants";
-import SangTable from "./SangTable";
 
-const slotcodes = {
-  0: 'QB',   // Quarterback
-  2: 'RB',   // Running Back
-  4: 'WR',   // Wide Receiver
-  16: 'DST',  // Defense/Special Teams
-  6: 'TE',
-  23: 'FLEX',
-  17: 'K',
-  20: 'BENCH'
+function calculateMeanAndStdDev(data) {
+  // Extract the values in the 1st index of each list
+  const values = data.map((item) => item[1]);
 
-  // Add more mappings as needed based on your specific data structure
+  // Calculate mean
+  const meanValue = values.reduce((acc, val) => acc + val, 0) / values.length;
+
+  // Calculate standard deviation
+  const squaredDifferences = values.map((val) => Math.pow(val - meanValue, 2));
+  const variance =
+    squaredDifferences.reduce((acc, val) => acc + val, 0) / values.length;
+  const stddevValue = Math.sqrt(variance);
+
+  return { meanValue, stddevValue };
+}
+
+function calculatePercentile(mean, stddev, value) {
+  // Calculate z-score
+  const zScore = (value - mean) / stddev;
+
+  // Use the error function (erf) to calculate the cumulative distribution function (CDF)
+  const erf = (z) => {
+    const t = 1.0 / (1.0 + 0.5 * Math.abs(z));
+    const erf =
+      t *
+      Math.exp(
+        -z * z -
+          1.26551223 +
+          t *
+            (1.00002368 +
+              t *
+                (0.37409196 +
+                  t *
+                    (0.09678418 +
+                      t *
+                        (-0.18628806 +
+                          t *
+                            (0.27886807 +
+                              t *
+                                (-1.13520398 +
+                                  t *
+                                    (1.48851587 +
+                                      t * (-0.82215223 + t * 0.17087277))))))))
+      );
+    return z >= 0 ? 1 - erf : erf - 1;
+  };
+
+  // Calculate percentile
+  const percentile = (1 + erf(zScore / Math.sqrt(2))) / 2;
+
+  return percentile;
+}
+
+function HSVtoRGB(h, s, v) {
+  var r, g, b, i, f, p, q, t;
+  if (arguments.length === 1) {
+    (s = h.s), (v = h.v), (h = h.h);
+  }
+  i = Math.floor(h * 6);
+  f = h * 6 - i;
+  p = v * (1 - s);
+  q = v * (1 - f * s);
+  t = v * (1 - (1 - f) * s);
+  switch (i % 6) {
+    case 0:
+      (r = v), (g = t), (b = p);
+      break;
+    case 1:
+      (r = q), (g = v), (b = p);
+      break;
+    case 2:
+      (r = p), (g = v), (b = t);
+      break;
+    case 3:
+      (r = p), (g = q), (b = v);
+      break;
+    case 4:
+      (r = t), (g = p), (b = v);
+      break;
+    case 5:
+      (r = v), (g = p), (b = q);
+      break;
+  }
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255)
+  };
+}
+
+function getQueryStringValue(key) {
+  // Get the query string from the current URL
+  const queryString = window.location.search;
+
+  // Create a new URLSearchParams object from the query string
+  const searchParams = new URLSearchParams(queryString);
+
+  // Use the get method to retrieve the value for the specified key
+  const value = searchParams.get(key);
+
+  return value;
+}
+
+function rainbow(p) {
+  var rgb = HSVtoRGB((p / 100.0) * 0.85, 1.0, 1.0);
+  return "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")";
+}
+
+window.mobileCheck = function() {
+  let check = false;
+  (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
+  return check;
 };
 
-function TotalContainer() {
-  const [selectedPosition, setSelectedPosition] = useState(0);
-  const [playerList, setPlayerList] = useState([]);
-  const [playerDPCountMap, setPlayerDPCountMap] = useState(new Map())
-  const [playerMap, setPlayerMap] = useState(new Map())
-  const [selectedMode, setSelectedMode] = useState(0);
-  const [selectedWeek, setSelectedWeek] = useState(11);
 
-  const scrapeEspnStats = async (week) => {
-    const getUrl =
-      "https://raw.githubusercontent.com/seoular/OddsVis/main/ESPNAPIFiles/week" + week + "hppr";
 
-    await fetch(getUrl)
-      .then((response) => {
-        return response.json();
+export default function SangTable(props) {
+  const [visList, setVisList] = useState([]);
+  // console.log(props.espnPlayerMap)
+  const mapNewVisList = (list, espnPlayerMap) => {
+    let meanAndStdDev;
+    // if(list.length < 50){
+    //   meanAndStdDev =  calculateMeanAndStdDev(list.slice(0, 23));
+    // } else{
+    meanAndStdDev = calculateMeanAndStdDev(list);
+
+    // }
+
+    let mean = meanAndStdDev.meanValue;
+    let stdDev = meanAndStdDev.stddevValue;
+
+    setVisList(
+      list.map((d) => {
+        let percentile = calculatePercentile(mean, stdDev, d[1]) * 100;
+        return {
+          playerName: d[0],
+          playerEV: d[1],
+          calculatedColor: rainbow(100 - percentile),
+          espnValues: espnPlayerMap.get(d[0]),
+          percentile: percentile
+        };
       })
-      .then((r) => {
-        // Assuming 'r' is the response object from a fetch operation in JavaScript
-        // Replace 'week' with the actual value you're using for week
-
-        let data = [];
-
-        // Assuming 'slotcodes' is defined somewhere in your code
-        // If not, you should define it with appropriate values
-        // Example: const slotcodes = { 0: 'QB', 1: 'RB', 2: 'WR', ... };
-
-        const d = r; // Assuming you are using this in an async function
-
-        for (const tm of d.teams) {
-          const tmid = tm.id;
-          for (const p of tm.roster.entries) {
-            const name = p.playerPoolEntry.player.fullName;
-            const slot = p.lineupSlotId;
-            const pos = slotcodes[slot];
-
-            // Injured status (need try/catch because of D/ST)
-            let inj = "NA";
-            try {
-              inj = p.playerPoolEntry.player.injuryStatus;
-            } catch (error) {
-              // Do nothing, leave 'NA' as the default value for injured status
-            }
-
-            // Projected/actual points
-            let proj = null,
-              act = null;
-
-            let week = 10;
-
-            for (const stat of p.playerPoolEntry.player.stats) {
-              if (stat.scoringPeriodId !== week) {
-                continue;
-              }
-              if (stat.statSourceId === 0) {
-                act = stat.appliedTotal;
-              } else if (stat.statSourceId === 1) {
-                proj = stat.appliedTotal;
-              }
-            }
-
-            data.push([week, tmid, name, slot, pos, inj, proj, act]);
-            playerMap.set(name, {
-              proj: proj?.toFixed(2),
-              act: act?.toFixed(2)
-            });
-          }
-        }
-
-        // console.log("\nComplete.");
-
-        // // Assuming you are using this in a browser environment with access to the console
-        // console.table(data); // Display data in a tabular format in the console
-      }).catch((e) => {
-        playerMap.clear()
-      });
-    setPlayerMap(playerMap)
+    );
   };
-
-  const scrapeData = async (pos, mode, week) => {
-    const sangPProps = new Map();
-    const dpCountMap = new Map();
-
-    let receptionMultiplier = .5;
-
-
-    if(mode == 0)
-      receptionMultiplier = .5;
-    else if(mode == 1)
-      receptionMultiplier = 0;
-    else if (mode == 2)
-      receptionMultiplier = 1;
-
-      //https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl
-    var getUrl = 'https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week;
-    await fetch(getUrl)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        let allNflGames = data[0].events.slice();
-        
-        for (let i = 0; i < allNflGames.length; i++) {
-          let eachGameTDOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-1870")
-            ?.markets.find(
-              (y) =>
-                y.descriptionKey == "Anytime Touchdown Scorer" &&
-                y.period.id == "119"
-            )?.outcomes;
-          let eachGameRushingOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-93")
-            ?.markets.filter((y) => y.marketTypeId == "121337");
-          let eachGameReceivingOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-94")
-            ?.markets.filter((y) => y.marketTypeId == "121333");
-          let eachGameReceptionOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-94")
-            ?.markets.filter((y) => y.marketTypeId == "121332");
-          let eachGamePassingYdOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-1188")
-            ?.markets.filter((y) => y.marketTypeId == "121348");
-          let eachGamePassingTDOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-1188")
-            ?.markets.filter((y) => y.marketTypeId == "121335");
-          let eachGameIntOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-1188")
-            ?.markets.filter((y) => y.marketTypeId == "121329");
-          if (typeof eachGameTDOutcomes !== "undefined") {
-            for (let j = 0; j < eachGameTDOutcomes.length; j++) {
-              let playerOdds = eachGameTDOutcomes[j];
-            
-              let correctedPlayerName = playerOdds.description;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              sangPProps.set(
-                correctedPlayerName,
-                (1 / playerOdds.price.decimal) * 6
-              );
-
-              dpCountMap.set(
-                correctedPlayerName,
-                1
-              )
-            }
-          }
-          if (typeof eachGameRushingOutcomes !== "undefined") {
-            for (let j = 0; j < eachGameRushingOutcomes.length; j++) {
-              let playerOdds = eachGameRushingOutcomes[j];
-              let name = playerOdds.description.slice(22);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-              
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap / 10
-              );             
-
-              let tempCount = dpCountMap.get(correctedPlayerName);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
-              }
-
-              dpCountMap.set(
-                correctedPlayerName,
-                tempCount + 1
-              )
-            }
-          }
-          if (typeof eachGameReceivingOutcomes !== "undefined") {
-            for (let j = 0; j < eachGameReceivingOutcomes.length; j++) {
-              let playerOdds = eachGameReceivingOutcomes[j];
-              let name = playerOdds.description.slice(24);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap / 10
-              );
-
-              let tempCount = dpCountMap.get(correctedPlayerName);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
-              }
-
-              dpCountMap.set(
-                correctedPlayerName,
-                tempCount + 1
-              )
-            }
-          }
-          if (typeof eachGameReceptionOutcomes !== "undefined") {
-            for (let j = 0; j < eachGameReceptionOutcomes.length; j++) {
-              let playerOdds = eachGameReceptionOutcomes[j];
-              let name = playerOdds.description.slice(19);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              // console.log('name ' + name + ' ' + temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier)
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier
-              );
-
-              let tempCount = dpCountMap.get(correctedPlayerName);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
-              }
-
-              dpCountMap.set(
-                correctedPlayerName,
-                tempCount + 1
-              )
-            }
-          }
-          if (typeof eachGamePassingYdOutcomes !== "undefined") {
-            for (let j = 0; j < eachGamePassingYdOutcomes.length; j++) {
-              let playerOdds = eachGamePassingYdOutcomes[j];
-              let name = playerOdds.description.slice(22);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap / 25
-              );
-
-              let tempCount = dpCountMap.get(correctedPlayerName);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
-              }
-
-              dpCountMap.set(
-                correctedPlayerName,
-                tempCount + 1
-              )
-            }
-          }
-          if (typeof eachGamePassingTDOutcomes !== "undefined") {
-            for (let j = 0; j < eachGamePassingTDOutcomes.length; j++) {
-              let playerOdds = eachGamePassingTDOutcomes[j];
-              let name = playerOdds.description.slice(27);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap * 4
-              );
-
-              let tempCount = dpCountMap.get(correctedPlayerName);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
-              }
-
-              dpCountMap.set(
-                correctedPlayerName,
-                tempCount + 1
-              )
-            }
-          }
-          if (typeof eachGameIntOutcomes !== "undefined") {
-            for (let j = 0; j < eachGameIntOutcomes.length; j++) {
-              let playerOdds = eachGameIntOutcomes[j];
-              let name = playerOdds.description.slice(29);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-              let correctedPlayerName = name;
-              //hacked fixed player list
-              if (correctedPlayerName == 'Amon-Ra St.Brown'){
-                correctedPlayerName = 'Amon-Ra St. Brown'
-              }
-              sangPProps.set(
-                correctedPlayerName,
-                temp + playerOdds.outcomes[0].price.handicap * -2
-              );
-            }
-          }
-        }
-
-        // console.log(Array.from(dpCountMap.entries()).sort((a, b) => b[1] - a[1]))
-
-        const mapEntries = Array.from(sangPProps.entries());
-        // Sort the array based on the numeric value (assuming values are numbers)
-        mapEntries.sort((a, b) => b[1] - a[1]);
-        // Create a new Map from the sorted array
-        const sortedMap = new Map(mapEntries);
-        let finalList = Array.from(sortedMap.entries()).filter(
-          (x) =>
-            typeof PlayerPosMap.get(x[0]) !== "undefined" &&
-            (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
-            x[1] > 6
-        );
-
-        setPlayerDPCountMap(dpCountMap)
-        setPlayerList(finalList);
-        // return finalList;
-      });
-    // .catch((err) => {
-    //   return [];
-    //   // Do something for an error here
-    // });
-  };
-
   useEffect(() => {
-    scrapeEspnStats(selectedWeek)
-  }, [selectedWeek])
-  useEffect(() => {
-    scrapeData(selectedPosition, selectedMode, selectedWeek).catch(console.error);
-  }, [selectedPosition, selectedMode, selectedWeek]); 
-  
-
-  const redirectToPatreon = () => {
-    window.location.href = 'https://www.patreon.com/evProjecter';
-  }
-
+    let filteredEvList = props.evList.filter((d) => 
+      props.dpCountMap.get(d[0]) >= 3
+    )
+    mapNewVisList(filteredEvList, props.espnPlayerMap);
+  }, [props.evList]);
   return (
-    <div>
-      <div>    
-        <div style={{display:'flex', marginLeft: '20px', marginBottom:'5px', marginTop:'15px'}}>           
-           Fantasy Football Projections Powered by Vegas Player Props
-        </div>   
-        <div style={{display:'flex'}}>
-          <select
-            defaultValue={selectedPosition}
-            onChange={(e) => {
-              setSelectedPosition(parseInt(e.target.value));
+    <div className="SangTable">
+      <table style={{}}>
+        <tr>
+          <th
+            style={{
+              width: "20px"
             }}
-            style={{ display: "flex", marginLeft: "20px" }}
-          >
-            <option value="0">QB</option>
-            <option value="1">RB</option>
-            <option value="2">WR</option>
-            <option value="3">TE</option>
-            <option value="98">FLEX</option>
-            <option value="99">SUPERFLEX</option>
-          </select>
-          <select
-            defaultValue={selectedMode}
-            onChange={(e) => {
-              setSelectedMode(parseInt(e.target.value));
+          ></th>
+          <th
+            style={window.mobileCheck() ? {
+              width: "300px"
+            } : {
+              width: "400px"
             }}
-            style={{ display: "flex", marginLeft: "20px" }}
           >
-            <option value="0">Half PPR</option>
-            <option value="1">Standard</option>
-            <option value="2">Full PPR</option>
-          </select>
-          <select
-            defaultValue={selectedWeek}
-            onChange={(e) => {
-              setSelectedWeek(parseInt(e.target.value));
+            Player {props.position}
+          </th>
+          <th
+            style={{
+              width: "46px"
             }}
-            style={{ display: "flex", marginLeft: "20px" }}
           >
-            <option value="11">Week 11</option>
-            <option value="10">Week 10</option>
-          </select>
-        </div>
-        <SangTable  evList={playerList} espnPlayerMap={playerMap} dpCountMap={playerDPCountMap} />
-    
-      
-      </div>
-      <div class="updateTimeSection" >
-        EV values last updated Sunday, 11/12 at 5:23am ET
-      </div>
-      <div class="patreonSection">
-        <div>
-          Access the Pro version with extra statistical insight and future functionality by supporting my Patreon link below
-        </div>
-        <button class="button" onClick={(e) => {redirectToPatreon()}}><span>evProjecterPro</span></button>
-      </div>
+            EV
+          </th>          
+          {getQueryStringValue('isPro')=='thanksdude' ? (
+            <>
+              <th
+                style={{
+                  width: "46px"
+                }}
+              >
+                ESPN actual
+              </th>
+              <th
+                style={{
+                  width: "46px"
+                }}
+              >
+                ESPN proj
+              </th>
+            </>
+          ) : <> </>}
+        </tr>
+        {visList.map((x, ix) => (
+          <tr>
+            <td
+              style={{
+                backgroundColor: x.calculatedColor,
+                color: 
+                 x.percentile > 75 && x.percentile < 83 ? "silver" : "white",
+                border: "1px solid " + x.calculatedColor,
+                borderRadius: "10px",
+                whiteSpace: "nowrap",
+                fontSize: ".5rem"
+              }}
+            >
+              {ix + 1}
+            </td>
+            <td
+              style={{
+                backgroundColor: x.calculatedColor,
+                color: 
+                 x.percentile > 75 && x.percentile < 83 ? "silver" : "white",
+                border: "1px solid " + x.calculatedColor,
+                borderRadius: "10px",
+                whiteSpace: "nowrap",
+                textAlign: "left"
+              }}
+            >
+              {
+                <div
+                  style={{
+                    marginLeft: window.mobileCheck() ? .5*((1 / x.playerEV.toFixed(2)) * 2000 - 80) + "px" : (1 / x.playerEV.toFixed(2)) * 2000 - 80 + "px"
+                  }}
+                >
+                  {x.playerName}
+                </div>
+              }
+            </td>
+            <td
+              style={{
+                backgroundColor: x.calculatedColor,
+                color: 
+                  x.percentile > 75 && x.percentile < 83 ? "silver" : "white",
+                border: "1px solid " + x.calculatedColor,
+                borderRadius: "10px",
+                width: "100px"
+              }}
+            >
+              {<div>{x.playerEV.toFixed(2)}</div>}
+            </td>            
+            {/* {true ?  */}
+            {getQueryStringValue('isPro')=='thanksdude' ? 
+              <>
+                <td
+                  style={{
+                    backgroundColor: x.calculatedColor,
+                    color: x.percentile > 75 && x.percentile < 83 ? "silver" : "white",
+                    border: "1px solid " + x.calculatedColor,
+                    borderRadius: "10px",
+                    width: "100px"
+                  }}
+                >
+                  {<div>{x.espnValues?.act}</div>}
+                </td>
+                <td
+                  style={{
+                    backgroundColor: x.calculatedColor,
+                    color: x.percentile > 75 && x.percentile < 83 ? "silver" : "white",
+                    border: "1px solid " + x.calculatedColor,
+                    borderRadius: "10px",
+                    width: "100px"
+                  }}
+                >
+                  {<div>{x.espnValues?.proj}</div>}
+                </td>
+              </>
+              : <> </>
+            }
+          </tr>
+        ))}
+      </table>
     </div>
   );
 }
-
-export default TotalContainer;
