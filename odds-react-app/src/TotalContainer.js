@@ -25,8 +25,11 @@ function TotalContainer() {
   const [selectedWeek, setSelectedWeek] = useState(11);
 
   const scrapeEspnStats = async (week) => {
+    //https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/995547?view=mMatchup&view=mMatchupScore
     const getUrl =
-      "https://raw.githubusercontent.com/seoular/OddsVis/main/ESPNAPIFiles/week" + week + "hppr";
+      "https://raw.githubusercontent.com/seoular/OddsVis/main/ESPNAPIFiles/latestHppr"
+    // we may need to return to this but currently just use the latest one as it has past history as well
+    //  "https://raw.githubusercontent.com/seoular/OddsVis/main/ESPNAPIFiles/week" + week + "hppr";
 
     await fetch(getUrl)
       .then((response) => {
@@ -63,7 +66,7 @@ function TotalContainer() {
             let proj = null,
               act = null;
 
-            let week = 10;
+            // let week = 10;
 
             for (const stat of p.playerPoolEntry.player.stats) {
               if (stat.scoringPeriodId !== week) {
