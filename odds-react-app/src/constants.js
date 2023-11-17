@@ -5,6 +5,19 @@ const Positions = {
   TE: 3,
   K: 4
  };
+
+ export const slotcodes = {
+  0: 'QB',   // Quarterback
+  2: 'RB',   // Running Back
+  4: 'WR',   // Wide Receiver
+  16: 'DST',  // Defense/Special Teams
+  6: 'TE',
+  23: 'FLEX',
+  17: 'K',
+  20: 'BENCH'
+
+  // Add more mappings as needed based on your specific data structure
+};
  export const PlayerPosMap = new Map([
   ["Josh Allen", Positions.QB],
   ["Lamar Jackson", Positions.QB],
