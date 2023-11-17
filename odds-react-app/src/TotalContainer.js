@@ -2,19 +2,7 @@ import "./styles.css";
 import React, { useState, useEffect } from "react";
 import { PlayerPosMap } from "./constants";
 import SangTable from "./SangTable";
-
-const slotcodes = {
-  0: 'QB',   // Quarterback
-  2: 'RB',   // Running Back
-  4: 'WR',   // Wide Receiver
-  16: 'DST',  // Defense/Special Teams
-  6: 'TE',
-  23: 'FLEX',
-  17: 'K',
-  20: 'BENCH'
-
-  // Add more mappings as needed based on your specific data structure
-};
+import {slotcodes} from './constants.js'
 
 function TotalContainer() {
   const [selectedPosition, setSelectedPosition] = useState(0);
@@ -36,17 +24,8 @@ function TotalContainer() {
         return response.json();
       })
       .then((r) => {
-        // Assuming 'r' is the response object from a fetch operation in JavaScript
-        // Replace 'week' with the actual value you're using for week
-
         let data = [];
-
-        // Assuming 'slotcodes' is defined somewhere in your code
-        // If not, you should define it with appropriate values
-        // Example: const slotcodes = { 0: 'QB', 1: 'RB', 2: 'WR', ... };
-
-        const d = r; // Assuming you are using this in an async function
-
+        const d = r;
         for (const tm of d.teams) {
           const tmid = tm.id;
           for (const p of tm.roster.entries) {
@@ -65,8 +44,6 @@ function TotalContainer() {
             // Projected/actual points
             let proj = null,
               act = null;
-
-            // let week = 10;
 
             for (const stat of p.playerPoolEntry.player.stats) {
               if (stat.scoringPeriodId !== week) {
@@ -87,10 +64,6 @@ function TotalContainer() {
           }
         }
 
-        // console.log("\nComplete.");
-
-        // // Assuming you are using this in a browser environment with access to the console
-        // console.table(data); // Display data in a tabular format in the console
       }).catch((e) => {
         playerMap.clear()
       });
@@ -364,7 +337,6 @@ function TotalContainer() {
 
         setPlayerDPCountMap(dpCountMap)
         setPlayerList(finalList);
-        // return finalList;
       });
     // .catch((err) => {
     //   return [];
