@@ -112,7 +112,8 @@ function TotalContainer() {
       receptionMultiplier = 1;
 
       //https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl
-    var getUrl = 'https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week;
+    var getUrl = 'https://raw.githubusercontent.com/seoular/test/main/bovadatest'
+    //'https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week;
     await fetch(getUrl)
       .then((response) => {
         return response.json();
@@ -431,7 +432,7 @@ function TotalContainer() {
       
       </div>
       <div class="updateTimeSection" >
-        EV values last updated Wednesday, 11/15 at 4:23pm ET
+        EV values last updated Thursday, 11/16 at 7:38pm ET
       </div>
       <div class="patreonSection">
         <div>
