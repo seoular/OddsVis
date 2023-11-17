@@ -112,8 +112,8 @@ function TotalContainer() {
       receptionMultiplier = 1;
 
       //https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl
-    var getUrl = 'https://raw.githubusercontent.com/seoular/test/main/bovadatest'
-    //'https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week;
+    var getUrl = //'https://raw.githubusercontent.com/seoular/test/main/bovadatest'
+      'https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week;
     await fetch(getUrl)
       .then((response) => {
         return response.json();
