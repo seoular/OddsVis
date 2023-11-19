@@ -377,7 +377,9 @@ export const PlayerPosMap = new Map([
     ["Johnny Mundt", Positions.TE],
     ["KJ Osborn", Positions.WR],
     ["Marvin Mims Jr",Positions.WR],
-    ["Travis Kelce", Positions.TE]  
+    ["Travis Kelce", Positions.TE],
+    ["Isiah Pacheco", Positions.RB],
+    
   // need to add chiefs and dolphins players / week 10 byes
 
 
