@@ -93,14 +93,17 @@ function TotalContainer() {
     let lastTestedInt = 0;
     let sangFlag = false;
 
-    while(await isFetchable('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)){
-      // console.log('loop hit' + testedInts + lastTestedInt)
+    let bovadaFileLoopFlag = true;
+
+
+    while(bovadaFileLoopFlag){
       if(testedInts > lastTestedInt){
         sangFlag = true;        
         lastTestedInt++;
       }
       await fetch('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
         .then((response) => {
+          // console.log(testedInts)
           return response.json();
         })
         .then((data) => {
@@ -497,11 +500,15 @@ function TotalContainer() {
 
           setPlayerDPCountMap(dpCountMap)
           setPlayerList(finalList);
+        }).catch((e) => {
+          //console.log(e)
         });
 
 
       testedInts++;
       sangFlag = false;
+      // console.log('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
+      bovadaFileLoopFlag = await isFetchable('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
     }
   };
 
