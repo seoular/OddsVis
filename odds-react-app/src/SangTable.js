@@ -33,7 +33,12 @@ export default function SangTable(props) {
   };
   useEffect(() => {
     let filteredEvList = props.evList.filter((d) => 
-      props.dpCountMap.get(d[0]) >= 3
+      {
+        // if (props.dpCountMap.get(d[0]) >= 3){
+        //   console.log(d)
+        // }
+        return props.dpCountMap.get(d[0]) >= 3
+      }
     )
     mapNewVisList(filteredEvList, props.espnPlayerMap);
   }, [props.evList]);
