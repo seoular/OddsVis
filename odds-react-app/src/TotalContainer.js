@@ -1,8 +1,8 @@
 import "./styles.css";
 import React, { useState, useEffect } from "react";
-import { PlayerPosMap } from "./constants";
+import { PlayerPosMap, slotcodes, DataPoints } from "./constants";
 import SangTable from "./SangTable";
-import {slotcodes} from './constants.js'
+import {isFetchable} from './util';
 
 function TotalContainer() {
   const [selectedPosition, setSelectedPosition] = useState(0);
@@ -11,6 +11,8 @@ function TotalContainer() {
   const [playerMap, setPlayerMap] = useState(new Map())
   const [selectedMode, setSelectedMode] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(11);
+
+  // console.log(isFetchable('https://raw.githubusercontent.com/seoular/test/main/bovada5'))
 
   const scrapeEspnStats = async (week) => {
     //https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/995547?view=mMatchup&view=mMatchupScore
@@ -73,6 +75,7 @@ function TotalContainer() {
   const scrapeData = async (pos, mode, week) => {
     const sangPProps = new Map();
     const dpCountMap = new Map();
+    const playerToDPListMap = new Map();
 
     let receptionMultiplier = .5;
 
@@ -85,263 +88,421 @@ function TotalContainer() {
       receptionMultiplier = 1;
 
       //https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl
-    var getUrl = //'https://raw.githubusercontent.com/seoular/test/main/bovadatest'
-      'https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week;
-    await fetch(getUrl)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        let allNflGames = data[0].events.slice();
-        
-        for (let i = 0; i < allNflGames.length; i++) {
-          let eachGameTDOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-1870")
-            ?.markets.find(
-              (y) =>
-                y.descriptionKey == "Anytime Touchdown Scorer" &&
-                y.period.id == "119"
-            )?.outcomes;
-          let eachGameRushingOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-93")
-            ?.markets.filter((y) => y.marketTypeId == "121337");
-          let eachGameReceivingOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-94")
-            ?.markets.filter((y) => y.marketTypeId == "121333");
-          let eachGameReceptionOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-94")
-            ?.markets.filter((y) => y.marketTypeId == "121332");
-          let eachGamePassingYdOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-1188")
-            ?.markets.filter((y) => y.marketTypeId == "121348");
-          let eachGamePassingTDOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-1188")
-            ?.markets.filter((y) => y.marketTypeId == "121335");
-          let eachGameIntOutcomes = allNflGames[i].displayGroups
-            .find((x) => x.id == "100-1188")
-            ?.markets.filter((y) => y.marketTypeId == "121329");
-          if (typeof eachGameTDOutcomes !== "undefined") {
-            let amonRaFlag = false;
-            for (let j = 0; j < eachGameTDOutcomes.length; j++) {
-              let playerOdds = eachGameTDOutcomes[j];
 
-              if(playerOdds.description == 'Amon-Ra St.Brown'  || playerOdds.description == 'Amon-Ra St. Brown'){
-                playerOdds.description = 'Amon-Ra St. Brown'
-                // console.log((1 / playerOdds.price.decimal) * 6)
+    let testedInts = 0;
+    let lastTestedInt = 0;
+    let sangFlag = false;
+
+    while(await isFetchable('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)){
+      // console.log('loop hit' + testedInts + lastTestedInt)
+      if(testedInts > lastTestedInt){
+        sangFlag = true;        
+        lastTestedInt++;
+      }
+      await fetch('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          let allNflGames = data[0].events.slice();
+          
+          for (let i = 0; i < allNflGames.length; i++) {
+            let eachGameTDOutcomes = allNflGames[i].displayGroups
+              .find((x) => x.id == "100-1870")
+              ?.markets.find(
+                (y) =>
+                  y.descriptionKey == "Anytime Touchdown Scorer" &&
+                  y.period.id == "119"
+              )?.outcomes;
+            let eachGameRushingOutcomes = allNflGames[i].displayGroups
+              .find((x) => x.id == "100-93")
+              ?.markets.filter((y) => y.marketTypeId == "121337");
+            let eachGameReceivingOutcomes = allNflGames[i].displayGroups
+              .find((x) => x.id == "100-94")
+              ?.markets.filter((y) => y.marketTypeId == "121333");
+            let eachGameReceptionOutcomes = allNflGames[i].displayGroups
+              .find((x) => x.id == "100-94")
+              ?.markets.filter((y) => y.marketTypeId == "121332");
+            let eachGamePassingYdOutcomes = allNflGames[i].displayGroups
+              .find((x) => x.id == "100-1188")
+              ?.markets.filter((y) => y.marketTypeId == "121348");
+            let eachGamePassingTDOutcomes = allNflGames[i].displayGroups
+              .find((x) => x.id == "100-1188")
+              ?.markets.filter((y) => y.marketTypeId == "121335");
+            let eachGameIntOutcomes = allNflGames[i].displayGroups
+              .find((x) => x.id == "100-1188")
+              ?.markets.filter((y) => y.marketTypeId == "121329");
+            if (typeof eachGameTDOutcomes !== "undefined") {
+              let amonRaFlag = false;
+              for (let j = 0; j < eachGameTDOutcomes.length; j++) {
+                let playerOdds = eachGameTDOutcomes[j];
+
+                // if(playerOdds.description == 'CJ Stroud' ||playerOdds.description ==  'C.J. Stroud'){
+                //   console.log(playerOdds.description + ' td outcomes ' + (1 / playerOdds.price.decimal) * 6)
+                // }
+                if(playerOdds.description == 'Amon-Ra St.Brown'  || playerOdds.description == 'Amon-Ra St. Brown'){
+                  playerOdds.description = 'Amon-Ra St. Brown'
+                  // console.log((1 / playerOdds.price.decimal) * 6)
+                }
+                playerOdds.description = playerOdds.description.replace(/\./g, '').replace(/ jr/i, '')
+                if( !amonRaFlag ) {
+                  if(sangFlag && sangPProps.has(playerOdds.description)){
+                    //compare to past value future functionality
+                    sangPProps.delete(playerOdds.description)
+                    dpCountMap.delete(playerOdds.description)                    
+                    playerToDPListMap.delete(name)
+                    sangFlag = false;
+                  }
+                  
+                  sangPProps.set(
+                    playerOdds.description,
+                    (1 / playerOdds.price.decimal) * 6
+                  );
+
+    
+                  dpCountMap.set(
+                    playerOdds.description,
+                    1
+                  )
+                  playerToDPListMap.set(playerOdds.description, [DataPoints.AnyTD])
+                }
+
+                if (name == 'Amon-Ra St. Brown'){
+                  amonRaFlag = true;
+                }
+                
               }
-              if( !amonRaFlag ) {
-                sangPProps.set(
-                  playerOdds.description,
-                  (1 / playerOdds.price.decimal) * 6
-                );
+            }
+            if (typeof eachGameRushingOutcomes !== "undefined") {
+              let amonRaFlag = false;
+              for (let j = 0; j < eachGameRushingOutcomes.length; j++) {
+                let playerOdds = eachGameRushingOutcomes[j];
+                let name = playerOdds.description.slice(22);
+                // if(name == 'CJ Stroud' ||name ==  'C.J. Stroud'){
+                //   console.log(name + ' rush outcomes ' + playerOdds.outcomes[0].price.handicap / 10)
+                // }
+                if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
+                  name = 'Amon-Ra St. Brown'
+                }
+                name = name.replace(/\./g, '').replace(/ jr/i, '')
+                let temp = sangPProps.get(name);
+                if (typeof temp == "undefined") {
+                  temp = 0;
+                } 
+                if( !amonRaFlag ) {
+
+                  if(sangFlag && sangPProps.has(name)){
+                    //compare to past value future functionality
+                    sangPProps.delete(name)
+                    dpCountMap.delete(name)                    
+                    playerToDPListMap.delete(name)
+                    sangFlag = false;
+                  }
+
+                  if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.RushYds)){
+                    sangPProps.set(
+                      name,
+                      temp + playerOdds.outcomes[0].price.handicap / 10
+                    );             
   
-                dpCountMap.set(
-                  playerOdds.description,
-                  1
-                )
+                    let tempCount = dpCountMap.get(name);
+                    if( typeof tempCount == "undefined"){
+                      tempCount = 0;
+                    }
+                   
+  
+                    dpCountMap.set(
+                      name,
+                      tempCount + 1
+                    )
+                    let tempDPList = playerToDPListMap.get(name)
+                    if( typeof tempDPList == 'undefined'){
+                      tempDPList = []
+                    }
+                    playerToDPListMap.set(
+                      name,
+                      tempDPList.concat([DataPoints.RushYds])
+                    )
+                  }
+                  
+                }
+                if (name == 'Amon-Ra St. Brown'){
+                  amonRaFlag = true;
+                }
               }
-
-              if (name == 'Amon-Ra St. Brown'){
-                amonRaFlag = true;
-              }
-              
             }
-          }
-          if (typeof eachGameRushingOutcomes !== "undefined") {
-            let amonRaFlag = false;
-            for (let j = 0; j < eachGameRushingOutcomes.length; j++) {
-              let playerOdds = eachGameRushingOutcomes[j];
-              let name = playerOdds.description.slice(22);
-              if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
-                name = 'Amon-Ra St. Brown'
-              }
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              } 
-              if( !amonRaFlag ) {
-                sangPProps.set(
-                  name,
-                  temp + playerOdds.outcomes[0].price.handicap / 10
-                );             
+            if (typeof eachGameReceivingOutcomes !== "undefined") {
+              let amonRaFlag = false;
+              for (let j = 0; j < eachGameReceivingOutcomes.length; j++) {
+                let playerOdds = eachGameReceivingOutcomes[j];
+                let name = playerOdds.description.slice(24);
+                // if(name == 'CJ Stroud' || name == 'C.J. Stroud'){
+                //   console.log(name + ' recyd outcomes ' + playerOdds.outcomes[0].price.handicap / 10)
+                // }
+                if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
+                  name = 'Amon-Ra St. Brown'
+                  // console.log(playerOdds.outcomes[0].price.handicap / 10)
+                }
+                name = name.replace(/\./g, '').replace(/ jr/i, '')
+                let temp = sangPProps.get(name);
+                if (typeof temp == "undefined") {
+                  temp = 0;
+                }
+                if( !amonRaFlag ) {
+                  if(sangFlag && sangPProps.has(name)){
+                    //compare to past value future functionality
+                    sangPProps.delete(name)
+                    dpCountMap.delete(name)
+                    playerToDPListMap.delete(name)
+                    sangFlag = false;
+                  }
+                  if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.RecYds)){
 
-                let tempCount = dpCountMap.get(name);
-                if( typeof tempCount == "undefined"){
-                  tempCount = 0;
+                    sangPProps.set(
+                      name,
+                      temp + playerOdds.outcomes[0].price.handicap / 10
+                    );
+
+                    let tempCount = dpCountMap.get(name);
+                    if( typeof tempCount == "undefined"){
+                      tempCount = 0;
+                    }
+
+                    dpCountMap.set(
+                      name,
+                      tempCount + 1
+                    )
+                    let tempDPList = playerToDPListMap.get(name)
+                    if( typeof tempDPList == 'undefined'){
+                      tempDPList = []
+                    }
+                    playerToDPListMap.set(
+                      name,
+                      tempDPList.concat([DataPoints.RecYds])
+                    )
+                  }
+                }
+                if (name == 'Amon-Ra St. Brown'){
+                  amonRaFlag = true;
+                }
+              }
+            }
+            if (typeof eachGameReceptionOutcomes !== "undefined") {
+              let amonRaFlag = false;
+
+              for (let j = 0; j < eachGameReceptionOutcomes.length; j++) {
+                let playerOdds = eachGameReceptionOutcomes[j];
+                let name = playerOdds.description.slice(19);
+                // if(name == 'CJ Stroud' || name == 'C.J. Stroud'){
+                //   console.log(name + ' reception outcomes ' + playerOdds.outcomes[0].price.handicap * receptionMultiplier)
+                // }
+                if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
+                  name = 'Amon-Ra St. Brown'
+                  // console.log(playerOdds.outcomes[0].price.handicap * receptionMultiplier)
+                } 
+                name = name.replace(/\./g, '').replace(/ jr/i, '')
+                let temp = sangPProps.get(name);
+
+                if (typeof temp == "undefined") {
+                  temp = 0;
+                }
+                if( !amonRaFlag ) {
+                  if(sangFlag && sangPProps.has(name)){
+                    //compare to past value future functionality
+                    sangPProps.delete(name)
+                    dpCountMap.delete(name)
+                    playerToDPListMap.delete(name)
+                    sangFlag = false;
+                  }
+                  if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.Recs)){
+
+                    sangPProps.set(
+                      name,
+                      temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier
+                    );
+
+                    let tempCount = dpCountMap.get(name);
+                    if( typeof tempCount == "undefined"){
+                      tempCount = 0;
+                    }
+
+                    dpCountMap.set(
+                      name,
+                      tempCount + 1
+                    )
+                    let tempDPList = playerToDPListMap.get(name)
+                    if( typeof tempDPList == 'undefined'){
+                      tempDPList = []
+                    }
+                    playerToDPListMap.set(
+                      name,
+                      tempDPList.concat([DataPoints.Recs])
+                    )
+                  }
                 }
 
-                dpCountMap.set(
-                  name,
-                  tempCount + 1
-                )
-              }
-              if (name == 'Amon-Ra St. Brown'){
-                amonRaFlag = true;
-              }
-            }
-          }
-          if (typeof eachGameReceivingOutcomes !== "undefined") {
-            let amonRaFlag = false;
-            for (let j = 0; j < eachGameReceivingOutcomes.length; j++) {
-              let playerOdds = eachGameReceivingOutcomes[j];
-              let name = playerOdds.description.slice(24);
-              if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
-                name = 'Amon-Ra St. Brown'
-                // console.log(playerOdds.outcomes[0].price.handicap / 10)
-              }
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-              if( !amonRaFlag ) {
-              
-                sangPProps.set(
-                  name,
-                  temp + playerOdds.outcomes[0].price.handicap / 10
-                );
-
-                let tempCount = dpCountMap.get(name);
-                if( typeof tempCount == "undefined"){
-                  tempCount = 0;
+                if (name == 'Amon-Ra St. Brown'){                
+                  amonRaFlag = true;
                 }
-
-                dpCountMap.set(
-                  name,
-                  tempCount + 1
-                )
-              }
-              if (name == 'Amon-Ra St. Brown'){
-                amonRaFlag = true;
               }
             }
-          }
-          if (typeof eachGameReceptionOutcomes !== "undefined") {
-            let amonRaFlag = false;
-
-            for (let j = 0; j < eachGameReceptionOutcomes.length; j++) {
-              let playerOdds = eachGameReceptionOutcomes[j];
-              let name = playerOdds.description.slice(19);
-              if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
-                name = 'Amon-Ra St. Brown'
-                // console.log(playerOdds.outcomes[0].price.handicap * receptionMultiplier)
-              } 
-              let temp = sangPProps.get(name);
-
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-              if( !amonRaFlag ) {
-
-                sangPProps.set(
-                  name,
-                  temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier
-                );
-
-                let tempCount = dpCountMap.get(name);
-                if( typeof tempCount == "undefined"){
-                  tempCount = 0;
+            if (typeof eachGamePassingYdOutcomes !== "undefined") {
+              for (let j = 0; j < eachGamePassingYdOutcomes.length; j++) {
+                let playerOdds = eachGamePassingYdOutcomes[j];
+                let name = playerOdds.description.slice(22);
+                // if(name == 'CJ Stroud' || name == 'C.J. Stroud'){
+                //   console.log(name + ' passyd outcomes ' + playerOdds.outcomes[0].price.handicap / 25)
+                // }
+                name = name.replace(/\./g, '').replace(/ jr/i, '')
+                let temp = sangPProps.get(name);
+                if (typeof temp == "undefined") {
+                  temp = 0;
                 }
+                if(sangFlag && sangPProps.has(name)){
+                  //compare to past value future functionality
+                  sangPProps.delete(name)
+                  dpCountMap.delete(name)
+                  playerToDPListMap.delete(name)
+                  sangFlag = false;
+                }
+                if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.PassYds)){
 
-                dpCountMap.set(
-                  name,
-                  tempCount + 1
-                )
+                  sangPProps.set(
+                    name,
+                    temp + playerOdds.outcomes[0].price.handicap / 25
+                  );
+
+                  let tempCount = dpCountMap.get(name);
+                  if( typeof tempCount == "undefined"){
+                    tempCount = 0;
+                  }
+
+                  dpCountMap.set(
+                    name,
+                    tempCount + 1
+                  )
+                  let tempDPList = playerToDPListMap.get(name)
+                  if( typeof tempDPList == 'undefined'){
+                    tempDPList = []
+                  }
+                  playerToDPListMap.set(
+                    name,
+                    tempDPList.concat([DataPoints.PassYds])
+                  )
+                }
               }
+            }
+            if (typeof eachGamePassingTDOutcomes !== "undefined") {
+              for (let j = 0; j < eachGamePassingTDOutcomes.length; j++) {
+                let playerOdds = eachGamePassingTDOutcomes[j];
+                let name = playerOdds.description.slice(27);
+                // if(name == 'CJ Stroud' || name == 'C.J. Stroud'){
+                //   console.log(name + ' passtd outcomes ' + playerOdds.outcomes[0].price.handicap * 4)
+                // }
+                name = name.replace(/\./g, '').replace(/ jr/i, '')
+                let temp = sangPProps.get(name);
+                if (typeof temp == "undefined") {
+                  temp = 0;
+                }
+                if(sangFlag && sangPProps.has(name)){
+                  //compare to past value future functionality
+                  sangPProps.delete(name)
+                  dpCountMap.delete(name)
+                  playerToDPListMap.delete(name)
+                  sangFlag = false;
+                }
+                if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.PassTD)){
 
-              if (name == 'Amon-Ra St. Brown'){                
-                amonRaFlag = true;
+                  sangPProps.set(
+                    name,
+                    temp + playerOdds.outcomes[0].price.handicap * 4
+                  );
+
+                  let tempCount = dpCountMap.get(name);
+                  if( typeof tempCount == "undefined"){
+                    tempCount = 0;
+                  }
+
+                  dpCountMap.set(
+                    name,
+                    tempCount + 1
+                  )
+                  let tempDPList = playerToDPListMap.get(name)
+                  if( typeof tempDPList == 'undefined'){
+                    tempDPList = []
+                  }
+                  playerToDPListMap.set(
+                    name,
+                    tempDPList.concat([DataPoints.PassTD])
+                  )
+                }
+              }
+            }
+            if (typeof eachGameIntOutcomes !== "undefined") {
+              for (let j = 0; j < eachGameIntOutcomes.length; j++) {
+                let playerOdds = eachGameIntOutcomes[j];
+                let name = playerOdds.description.slice(29);
+                // if(name == 'CJ Stroud' || name ==  'C.J. Stroud'){
+                //   console.log(name + ' int outcomes ' + playerOdds.outcomes[0].price.handicap * -2)
+                //   console.log(sangPProps.has(name) + ' ' +  sangFlag)
+                // }
+                name = name.replace(/\./g, '').replace(/ jr/i, '')
+                let temp = sangPProps.get(name);
+                if (typeof temp == "undefined") {
+                  temp = 0;
+                }
+                if(sangFlag && sangPProps.has(name)){
+                  //compare to past value future functionality
+                  sangPProps.delete(name)
+                  dpCountMap.delete(name)
+                  playerToDPListMap.delete(name)
+                  sangFlag = false;
+                }
+                if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.Ints)){
+
+                  sangPProps.set(
+                    name,
+                    temp + playerOdds.outcomes[0].price.handicap * -2
+                  );
+                  let tempDPList = playerToDPListMap.get(name)
+                  if( typeof tempDPList == 'undefined'){
+                    tempDPList = []
+                  }
+                  playerToDPListMap.set(
+                    name,
+                    tempDPList.concat([DataPoints.Ints])
+                  )
+                  // if(name == 'CJ Stroud' || name ==  'C.J. Stroud'){
+                  //   console.log('postcheck ' + sangPProps.has(name) + ' ' +  sangFlag)
+                  // }
+                }
               }
             }
           }
-          if (typeof eachGamePassingYdOutcomes !== "undefined") {
-            for (let j = 0; j < eachGamePassingYdOutcomes.length; j++) {
-              let playerOdds = eachGamePassingYdOutcomes[j];
-              let name = playerOdds.description.slice(22);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
 
-              sangPProps.set(
-                name,
-                temp + playerOdds.outcomes[0].price.handicap / 25
-              );
+          // console.log(Array.from(dpCountMap.entries()).sort((a, b) => b[1] - a[1]))
+          // console.log(Array.from(sangPProps.entries()).sort((a, b) => b[1] - a[1]))
 
-              let tempCount = dpCountMap.get(name);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
-              }
+          const mapEntries = Array.from(sangPProps.entries());
+          // Sort the array based on the numeric value (assuming values are numbers)
+          mapEntries.sort((a, b) => b[1] - a[1]);
+          // Create a new Map from the sorted array
+          const sortedMap = new Map(mapEntries);
+          let finalList = Array.from(sortedMap.entries()).filter(
+            (x) =>
+              typeof PlayerPosMap.get(x[0]) !== "undefined" &&
+              (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
+              x[1] > 5
+          );
 
-              dpCountMap.set(
-                name,
-                tempCount + 1
-              )
-            }
-          }
-          if (typeof eachGamePassingTDOutcomes !== "undefined") {
-            for (let j = 0; j < eachGamePassingTDOutcomes.length; j++) {
-              let playerOdds = eachGamePassingTDOutcomes[j];
-              let name = playerOdds.description.slice(27);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
+          setPlayerDPCountMap(dpCountMap)
+          setPlayerList(finalList);
+        });
 
-              sangPProps.set(
-                name,
-                temp + playerOdds.outcomes[0].price.handicap * 4
-              );
 
-              let tempCount = dpCountMap.get(name);
-              if( typeof tempCount == "undefined"){
-                tempCount = 0;
-              }
-
-              dpCountMap.set(
-                name,
-                tempCount + 1
-              )
-            }
-          }
-          if (typeof eachGameIntOutcomes !== "undefined") {
-            for (let j = 0; j < eachGameIntOutcomes.length; j++) {
-              let playerOdds = eachGameIntOutcomes[j];
-              let name = playerOdds.description.slice(29);
-              let temp = sangPProps.get(name);
-              if (typeof temp == "undefined") {
-                temp = 0;
-              }
-
-              sangPProps.set(
-                name,
-                temp + playerOdds.outcomes[0].price.handicap * -2
-              );
-            }
-          }
-        }
-
-        // console.log(Array.from(dpCountMap.entries()).sort((a, b) => b[1] - a[1]))
-        // console.log(Array.from(sangPProps.entries()).sort((a, b) => b[1] - a[1]))
-
-        const mapEntries = Array.from(sangPProps.entries());
-        // Sort the array based on the numeric value (assuming values are numbers)
-        mapEntries.sort((a, b) => b[1] - a[1]);
-        // Create a new Map from the sorted array
-        const sortedMap = new Map(mapEntries);
-        let finalList = Array.from(sortedMap.entries()).filter(
-          (x) =>
-            typeof PlayerPosMap.get(x[0]) !== "undefined" &&
-            (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
-            x[1] > 5
-        );
-
-        setPlayerDPCountMap(dpCountMap)
-        setPlayerList(finalList);
-      });
-    // .catch((err) => {
-    //   return [];
-    //   // Do something for an error here
-    // });
+      testedInts++;
+      sangFlag = false;
+    }
   };
 
   useEffect(() => {
@@ -404,7 +565,7 @@ function TotalContainer() {
       
       </div>
       <div class="updateTimeSection" >
-        EV values last updated Saturday, 11/18 at 4:00pm ET
+        EV values last updated Friday, 11/17 at 5:59pm ET
       </div>
       <div class="patreonSection">
         <div>
