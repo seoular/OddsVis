@@ -106,5 +106,11 @@ export function rainbow(p) {
   return "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")";
 }
 
-
-
+export async function isFetchable(url) {
+  try {
+    const response = await fetch(url);
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+}
