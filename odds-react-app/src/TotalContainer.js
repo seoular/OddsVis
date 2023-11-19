@@ -148,6 +148,11 @@ function TotalContainer() {
                   // console.log((1 / playerOdds.price.decimal) * 6)
                 }
                 playerOdds.description = playerOdds.description.replace(/\./g, '').replace(/ jr/i, '')
+                if (playerOdds.description == 'AJ Brown '){
+                  playerOdds.description = playerOdds.description.slice(0, -1)
+                }
+
+
                 if( !amonRaFlag ) {
                   if(sangFlag && sangPProps.has(playerOdds.description)){
                     //compare to past value future functionality
@@ -188,6 +193,9 @@ function TotalContainer() {
                   name = 'Amon-Ra St. Brown'
                 }
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
+                if (name == 'AJ Brown '){
+                  name = name.slice(0, -1)
+                }
                 let temp = sangPProps.get(name);
                 if (typeof temp == "undefined") {
                   temp = 0;
@@ -247,6 +255,9 @@ function TotalContainer() {
                   // console.log(playerOdds.outcomes[0].price.handicap / 10)
                 }
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
+                if (name == 'AJ Brown '){
+                  name = name.slice(0, -1)
+                }
                 let temp = sangPProps.get(name);
                 if (typeof temp == "undefined") {
                   temp = 0;
@@ -304,6 +315,9 @@ function TotalContainer() {
                   // console.log(playerOdds.outcomes[0].price.handicap * receptionMultiplier)
                 } 
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
+                if (name == 'AJ Brown '){
+                  name = name.slice(0, -1)
+                }
                 let temp = sangPProps.get(name);
 
                 if (typeof temp == "undefined") {
@@ -357,6 +371,9 @@ function TotalContainer() {
                 //   console.log(name + ' passyd outcomes ' + playerOdds.outcomes[0].price.handicap / 25)
                 // }
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
+                if (name == 'AJ Brown '){
+                  name = name.slice(0, -1)
+                }
                 let temp = sangPProps.get(name);
                 if (typeof temp == "undefined") {
                   temp = 0;
@@ -403,6 +420,9 @@ function TotalContainer() {
                 //   console.log(name + ' passtd outcomes ' + playerOdds.outcomes[0].price.handicap * 4)
                 // }
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
+                if (name == 'AJ Brown '){
+                  name = name.slice(0, -1)
+                }
                 let temp = sangPProps.get(name);
                 if (typeof temp == "undefined") {
                   temp = 0;
@@ -450,6 +470,9 @@ function TotalContainer() {
                 //   console.log(sangPProps.has(name) + ' ' +  sangFlag)
                 // }
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
+                if (name == 'AJ Brown '){
+                  name = name.slice(0, -1)
+                }
                 let temp = sangPProps.get(name);
                 if (typeof temp == "undefined") {
                   temp = 0;
