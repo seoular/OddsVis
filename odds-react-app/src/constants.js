@@ -4,7 +4,7 @@ const Positions = {
   WR: 2,
   TE: 3,
   K: 4
- };
+};
 
 export const DataPoints = {
   AnyTD: 0,
@@ -14,17 +14,17 @@ export const DataPoints = {
   PassTD: 4,
   PassYds: 5,
   Ints: 6
- };
+};
 
- export const slotcodes = {
-  0: 'QB',   // Quarterback
-  2: 'RB',   // Running Back
-  4: 'WR',   // Wide Receiver
-  16: 'DST',  // Defense/Special Teams
-  6: 'TE',
-  23: 'FLEX',
-  17: 'K',
-  20: 'BENCH'
+export const slotcodes = {
+  0: "QB", // Quarterback
+  2: "RB", // Running Back
+  4: "WR", // Wide Receiver
+  16: "DST", // Defense/Special Teams
+  6: "TE",
+  23: "FLEX",
+  17: "K",
+  20: "BENCH"
 
   // Add more mappings as needed based on your specific data structure
 };
@@ -243,429 +243,428 @@ export const PlayerPosMap = new Map([
   ["Michael Carter", Positions.RB],
   ["Josh Oliver", Positions.TE],
   ["Ja'Marr Chase", Positions.WR],
-  ["Tyler Boyd", Positions.WR], 
+  ["Tyler Boyd", Positions.WR],
   ["Trenton Irwin", Positions.WR],
   ["AJ Brown ", Positions.WR],
   ["DeVonta Smith", Positions.WR],
   ["Rashee Rice", Positions.WR],
   ["Nico Collins", Positions.WR],
-    ["Mike Boone", Positions.RB],
-    ["Rondale Moore", Positions.WR],
-    ["John Metchie III", Positions.WR],
-    ["CJ Stroud", Positions.QB],
-    ["Keaontay Ingram", Positions.RB],
-    ["Xavier Hutchinson", Positions.WR],
-    ["Brevin Jordan", Positions.TE],
-    ["Geoff Swaim", Positions.TE],
-    ["Greg Dortch", Positions.WR],
-    ["D'Onta Foreman", Positions.RB],
-    ["Justin Fields", Positions.QB],
-    ["Khalil Herbert", Positions.RB],
-    ["DJ Moore", Positions.WR],
-    ["Cole Kmet", Positions.TE],
-    ["Roschon Johnson", Positions.RB],
-    ["Darnell Mooney", Positions.WR],
-    ["Tyler Scott", Positions.DE],
-    ["Equanimeous St Brown", Positions.WR],
-    ["Travis Homer", Positions.RB],
-    ["Robert Tonyan Jr", Positions.TE],
-    ["Marcedes Lewis", Positions.TE],
-    ["Trent Taylor", Positions.WR],
-    ["Chuba Hubbard", Positions.RB],
-    ["Adam Thielen", Positions.WR],
-    ["Miles Sanders", Positions.RB],
-    ["DJ Chark", Positions.WR],
-    ["Jonathan Mingo", Positions.WR],
-    ["Terrace Marshall Jr", Positions.WR],
-    ["Jalen Brooks", Positions.WR],
-    ["Bryce Young", Positions.QB],
-    ["Tommy Tremble", Positions.TE],
-    ["Luke Schoonmaker", Positions.TE],
-    ["Peyton Hendershot", Positions.TE],
-    ["Laviska Shenault Jr", Positions.WR],
-    ["Hunter Luepke", Positions.FB],
-    ["Sean McKeon", Positions.TE],
-    ["Ian Thomas", Positions.TE],
-    ["DJ Chark Jr", Positions.WR],
-    ["Stephen Sullivan", Positions.TE],
-    ["Tyreek Hill", Positions.WR],
-    ["Raheem Mostert", Positions.RB],
-    ["De'Von Achane", Positions.RB],
-    ["Jaylen Waddle", Positions.WR],
-    ["Jeff Wilson Jr", Positions.RB],
-    ["Cedrick Wilson", Positions.WR],
-    ["Durham Smythe", Positions.TE],
-    ["Salvon Ahmed", Positions.RB],
-    ["Tua Tagovailoa", Positions.QB],
-    ["Braxton Berrios", Positions.WR],
-    ["Julian Hill", Positions.WR],
-    ["Austin Hooper", Positions.TE],
-    ["Hunter Renfrow", Positions.WR],
-    ["Alec Ingold", Positions.FB],
-    ["Ameer Abdullah", Positions.RB],
-    ["Deandre Carter", Positions.WR],
-    ["Tre Tucker", Positions.WR],
-    ["Zamir White", Positions.RB],
-    ["Devon Achane", Positions.RB],
-    ["Derius Davis", Positions.WR],
-    ["Tucker Kraft", Positions.TE],
-    ["Stone Smartt", Positions.QB],
-    ["Malik Heath", Positions.WR],
-    ["Nick Vannett", Positions.TE],
-    ["Simi Fehoko", Positions.WR],
-    ["Josiah Deguara", Positions.TE],
-    ["Matt Breida", Positions.RB],
-    ["Chris Rodriguez Jr", Positions.RB],
-    ["Jashaun Corbin", Positions.RB],
-    ["Dyami Brown", Positions.WR],
-    ["Isaiah Hodgins", Positions.WR],
-    ["Byron Pringle", Positions.WR],
-    ["John Bates", Positions.TE],
-    ["Sterling Shepard", Positions.WR],
-    ["Deon Jackson", Positions.RB],
-    ["Lawrence Cager", Positions.WR],
-    ["Parris Campbell", Positions.WR],
-    ["Pat Freiermuth", Positions.TE],
-    ["Dorian Thompson-Robinson", Positions.QB],
-    ["Cedric Tillman", Positions.WR],
-    ["David Bell", Positions.WR],
-    ["Pierre Strong", Positions.RB],
-    ["Miles Boykin", Positions.WR],
-    ["James Proche", Positions.WR],
-    ["Darnell Washington", Positions.TE],
-    ["Jordan Akins", Positions.TE],
-    ["Elijah Cooks", Positions.WR],
-    ["Brenton Strange", Positions.TE],
-    ["Luke Farrell", Positions.TE],
-    ["Parker Washington", Positions.WR],
-    ["Josh Whyle", Positions.TE],
-    ["Trevon Wesco", Positions.TE],
-    ["Kyle Juszczyk", Positions.FB],
-    ["Deven Thompkins", Positions.WR],
-    ["Ronnie Bell", Positions.WR],
-    ["Rakim Jarrett", Positions.WR],
-    ["Ke'Shawn Vaughn", Positions.RB],
-    ["Ko Kieft", Positions.TE],
-    ["Payne Durham", Positions.TE],
-    ["Israel Abanikanda", Positions.RB],
-    ["Malik Taylor", Positions.WR],
-    ["Randall Cobb", Positions.WR],
-    ["Trent Sherfield", Positions.WR],
-    ["CJ Uzomah", Positions.TE],
-    ["Reggie Gilliam", Positions.FB],
-    ["Irvin Charles", Positions.WR],
-    ["Jeremy Ruckert", Positions.TE],
-    ["Cooper Kupp", Positions.WR],
-    ["Darrell Henderson", Positions.RB],
-    ["Puka Nacua", Positions.WR],
-    ["Royce Freeman", Positions.RB],
-    ["Tutu Atwell", Positions.WR],
-    ["Tyler Higbee", Positions.TE],
-    ["Ben Skowronek", Positions.WR],
-    ["Matthew Stafford", Positions.QB],
-    ["Will Dissly", Positions.TE],
-    ["Demarcus Robinson", Positions.WR],
-    ["Brycen Hopkins", Positions.TE],
-    ["Davis Allen", Positions.TE],
-    ["Darrell Henderson Jr", Positions.RB],
-    ["Kene Nwangwu", Positions.RB],
-    ["Lil'Jordan Humphrey", Positions.WR],
-    ["Myles Gaskin", Positions.RB],
-    ["Jalen Nailor", Positions.WR],
-    ["Chris Manhertz", Positions.TE],
-    ["N'Keal Harry", Positions.WR],
-    ["Johnny Mundt", Positions.TE],
-    ["KJ Osborn", Positions.WR],
-    ["Marvin Mims Jr",Positions.WR],
-    ["Travis Kelce", Positions.TE],
-    ["Isiah Pacheco", Positions.RB],
-    
+  ["Mike Boone", Positions.RB],
+  ["Rondale Moore", Positions.WR],
+  ["John Metchie III", Positions.WR],
+  ["CJ Stroud", Positions.QB],
+  ["Keaontay Ingram", Positions.RB],
+  ["Xavier Hutchinson", Positions.WR],
+  ["Brevin Jordan", Positions.TE],
+  ["Geoff Swaim", Positions.TE],
+  ["Greg Dortch", Positions.WR],
+  ["D'Onta Foreman", Positions.RB],
+  ["Justin Fields", Positions.QB],
+  ["Khalil Herbert", Positions.RB],
+  ["DJ Moore", Positions.WR],
+  ["Cole Kmet", Positions.TE],
+  ["Roschon Johnson", Positions.RB],
+  ["Darnell Mooney", Positions.WR],
+  ["Tyler Scott", Positions.DE],
+  ["Equanimeous St Brown", Positions.WR],
+  ["Travis Homer", Positions.RB],
+  ["Robert Tonyan Jr", Positions.TE],
+  ["Marcedes Lewis", Positions.TE],
+  ["Trent Taylor", Positions.WR],
+  ["Chuba Hubbard", Positions.RB],
+  ["Adam Thielen", Positions.WR],
+  ["Miles Sanders", Positions.RB],
+  ["DJ Chark", Positions.WR],
+  ["Jonathan Mingo", Positions.WR],
+  ["Terrace Marshall Jr", Positions.WR],
+  ["Jalen Brooks", Positions.WR],
+  ["Bryce Young", Positions.QB],
+  ["Tommy Tremble", Positions.TE],
+  ["Luke Schoonmaker", Positions.TE],
+  ["Peyton Hendershot", Positions.TE],
+  ["Laviska Shenault Jr", Positions.WR],
+  ["Hunter Luepke", Positions.FB],
+  ["Sean McKeon", Positions.TE],
+  ["Ian Thomas", Positions.TE],
+  ["DJ Chark Jr", Positions.WR],
+  ["Stephen Sullivan", Positions.TE],
+  ["Tyreek Hill", Positions.WR],
+  ["Raheem Mostert", Positions.RB],
+  ["De'Von Achane", Positions.RB],
+  ["Jaylen Waddle", Positions.WR],
+  ["Jeff Wilson Jr", Positions.RB],
+  ["Cedrick Wilson", Positions.WR],
+  ["Durham Smythe", Positions.TE],
+  ["Salvon Ahmed", Positions.RB],
+  ["Tua Tagovailoa", Positions.QB],
+  ["Braxton Berrios", Positions.WR],
+  ["Julian Hill", Positions.WR],
+  ["Austin Hooper", Positions.TE],
+  ["Hunter Renfrow", Positions.WR],
+  ["Alec Ingold", Positions.FB],
+  ["Ameer Abdullah", Positions.RB],
+  ["Deandre Carter", Positions.WR],
+  ["Tre Tucker", Positions.WR],
+  ["Zamir White", Positions.RB],
+  ["Devon Achane", Positions.RB],
+  ["Derius Davis", Positions.WR],
+  ["Tucker Kraft", Positions.TE],
+  ["Stone Smartt", Positions.QB],
+  ["Malik Heath", Positions.WR],
+  ["Nick Vannett", Positions.TE],
+  ["Simi Fehoko", Positions.WR],
+  ["Josiah Deguara", Positions.TE],
+  ["Matt Breida", Positions.RB],
+  ["Chris Rodriguez Jr", Positions.RB],
+  ["Jashaun Corbin", Positions.RB],
+  ["Dyami Brown", Positions.WR],
+  ["Isaiah Hodgins", Positions.WR],
+  ["Byron Pringle", Positions.WR],
+  ["John Bates", Positions.TE],
+  ["Sterling Shepard", Positions.WR],
+  ["Deon Jackson", Positions.RB],
+  ["Lawrence Cager", Positions.WR],
+  ["Parris Campbell", Positions.WR],
+  ["Pat Freiermuth", Positions.TE],
+  ["Dorian Thompson-Robinson", Positions.QB],
+  ["Cedric Tillman", Positions.WR],
+  ["David Bell", Positions.WR],
+  ["Pierre Strong", Positions.RB],
+  ["Miles Boykin", Positions.WR],
+  ["James Proche", Positions.WR],
+  ["Darnell Washington", Positions.TE],
+  ["Jordan Akins", Positions.TE],
+  ["Elijah Cooks", Positions.WR],
+  ["Brenton Strange", Positions.TE],
+  ["Luke Farrell", Positions.TE],
+  ["Parker Washington", Positions.WR],
+  ["Josh Whyle", Positions.TE],
+  ["Trevon Wesco", Positions.TE],
+  ["Kyle Juszczyk", Positions.FB],
+  ["Deven Thompkins", Positions.WR],
+  ["Ronnie Bell", Positions.WR],
+  ["Rakim Jarrett", Positions.WR],
+  ["Ke'Shawn Vaughn", Positions.RB],
+  ["Ko Kieft", Positions.TE],
+  ["Payne Durham", Positions.TE],
+  ["Israel Abanikanda", Positions.RB],
+  ["Malik Taylor", Positions.WR],
+  ["Randall Cobb", Positions.WR],
+  ["Trent Sherfield", Positions.WR],
+  ["CJ Uzomah", Positions.TE],
+  ["Reggie Gilliam", Positions.FB],
+  ["Irvin Charles", Positions.WR],
+  ["Jeremy Ruckert", Positions.TE],
+  ["Cooper Kupp", Positions.WR],
+  ["Darrell Henderson", Positions.RB],
+  ["Puka Nacua", Positions.WR],
+  ["Royce Freeman", Positions.RB],
+  ["Tutu Atwell", Positions.WR],
+  ["Tyler Higbee", Positions.TE],
+  ["Ben Skowronek", Positions.WR],
+  ["Matthew Stafford", Positions.QB],
+  ["Will Dissly", Positions.TE],
+  ["Demarcus Robinson", Positions.WR],
+  ["Brycen Hopkins", Positions.TE],
+  ["Davis Allen", Positions.TE],
+  ["Darrell Henderson Jr", Positions.RB],
+  ["Kene Nwangwu", Positions.RB],
+  ["Lil'Jordan Humphrey", Positions.WR],
+  ["Myles Gaskin", Positions.RB],
+  ["Jalen Nailor", Positions.WR],
+  ["Chris Manhertz", Positions.TE],
+  ["N'Keal Harry", Positions.WR],
+  ["Johnny Mundt", Positions.TE],
+  ["KJ Osborn", Positions.WR],
+  ["Marvin Mims Jr", Positions.WR],
+  ["Travis Kelce", Positions.TE],
+  ["Isiah Pacheco", Positions.RB],
+  ["Jalen Hurts", Positions.QB],
+  ["Patrick Mahomes", Positions.QB]
+
   // need to add chiefs and dolphins players / week 10 byes
-
-
- ]);
- // [
- //   "Deven Thompkins",
- //   0.8
- // ],
- // [
- //   "Derius Davis",
- //   0.8
- // ],
- // [
- //   "Nick Vannett",
- //   0.8
- // ],
- // [
- //   "Matt Breida",
- //   0.8
- // ],
- // [
- //   "Dyami Brown",
- //   0.8
- // ],
- // [
- //   "Lil'Jordan Humphrey",
- //   0.8
- // ],
- // [
- //   "Juwann Winfree",
- //   0.75
- // ],
- // [
- //   "Mo Alie-Cox",
- //   0.75
- // ],
- // [
- //   "Marquise Goodwin",
- //   0.75
- // ],
- // [
- //   "Pierre Strong",
- //   0.75
- // ],
- // [
- //   "Luke Schoonmaker",
- //   0.75
- // ],
- // [
- //   "Austin Hooper",
- //   0.75
- // ],
- // [
- //   "Hunter Renfrow",
- //   0.75
- // ],
- // [
- //   "Trent Sherfield",
- //   0.75
- // ],
- // [
- //   "Tyquan Thornton",
- //   0.7058823529411764
- // ],
- // [
- //   "Will Dissly",
- //   0.7058823529411764
- // ],
- // [
- //   "Jalen Nailor",
- //   0.6666666666666666
- // ],
- // [
- //   "Kyle Juszczyk",
- //   0.6666666666666666
- // ],
- // [
- //   "Ronnie Bell",
- //   0.6666666666666666
- // ],
- // [
- //   "Ke'Shawn Vaughn",
- //   0.6666666666666666
- // ],
- // [
- //   "Payne Durham",
- //   0.6666666666666666
- // ],
- // [
- //   "Rakim Jarrett",
- //   0.6666666666666666
- // ],
- // [
- //   "David Bell",
- //   0.631578947368421
- // ],
- // [
- //   "Simi Fehoko",
- //   0.631578947368421
- // ],
- // [
- //   "Stone Smartt",
- //   0.631578947368421
- // ],
- // [
- //   "Chris Rodriguez Jr.",
- //   0.631578947368421
- // ],
- // [
- //   "Josiah Deguara",
- //   0.6000000000000001
- // ],
- // [
- //   "Derek Carr",
- //   0.6000000000000001
- // ],
- // [
- //   "Kendre Miller",
- //   0.6000000000000001
- // ],
- // [
- //   "Isaiah Hodgins",
- //   0.6000000000000001
- // ],
- // [
- //   "C.J Uzomah",
- //   0.6000000000000001
- // ],
- // [
- //   "Ameer Abdullah",
- //   0.6000000000000001
- // ],
- // [
- //   "Tre Tucker",
- //   0.6000000000000001
- // ],
- // [
- //   "Pharaoh Brown",
- //   0.5454545454545454
- // ],
- // [
- //   "Ty Montgomery",
- //   0.5454545454545454
- // ],
- // [
- //   "Darnell Washington",
- //   0.5454545454545454
- // ],
- // [
- //   "Brenton Strange",
- //   0.5454545454545454
- // ],
- // [
- //   "Luke Farrell",
- //   0.5454545454545454
- // ],
- // [
- //   "Cedric Tillman",
- //   0.5
- // ],
- // [
- //   "James Proche",
- //   0.5
- // ],
- // [
- //   "N'Keal Harry",
- //   0.5
- // ],
- // [
- //   "James Mitchell",
- //   0.5
- // ],
- // [
- //   "Hunter Luepke",
- //   0.5
- // ],
- // [
- //   "Sean McKeon",
- //   0.5
- // ],
- // [
- //   "Byron Pringle",
- //   0.5
- // ],
- // [
- //   "Cole Turner",
- //   0.5
- // ],
- // [
- //   "John Bates",
- //   0.5
- // ],
- // [
- //   "Reggie Gilliam",
- //   0.5
- // ],
- // [
- //   "Chris Manhertz",
- //   0.5
- // ],
- // [
- //   "Malik Heath",
- //   0.46153846153846156
- // ],
- // [
- //   "Tucker Kraft",
- //   0.46153846153846156
- // ],
- // [
- //   "Charlie Woerner",
- //   0.46153846153846156
- // ],
- // [
- //   "Deandre Carter",
- //   0.46153846153846156
- // ],
- // [
- //   "Will Mallory",
- //   0.4
- // ],
- // [
- //   "Devin Duvernay",
- //   0.4
- // ],
- // [
- //   "Isaiah Likely",
- //   0.4
- // ],
- // [
- //   "Patrick Ricard",
- //   0.4
- // ],
- // [
- //   "Jordan Akins",
- //   0.4
- // ],
- // [
- //   "Lynn Bowden Jr.",
- //   0.4
- // ],
- // [
- //   "C.J Ham",
- //   0.3529411764705882
- // ],
- // [
- //   "Johnny Mundt",
- //   0.3529411764705882
- // ],
- // [
- //   "Ko Kieft",
- //   0.3529411764705882
- // ],
- // [
- //   "Trevon Wesco",
- //   0.3529411764705882
- // ],
- // [
- //   "Sterling Shepard",
- //   0.3529411764705882
- // ],
- // [
- //   "Michael Burton",
- //   0.3529411764705882
- // ],
- // [
- //   "Jeremy Ruckert",
- //   0.3157894736842105
- // ],
- // [
- //   "Malik Taylor",
- //   0.3157894736842105
- // ],
- // [
- //   "Jakob Johnson",
- //   0.3157894736842105
- // ],
- // [
- //   "Zamir White",
- //   0.3157894736842105
- // ],
- // [
- //   "Lawrence Cager",
- //   0.2857142857142857
- // ],
- // [
- //   "Parris Campbell",
- //   0.2857142857142857
- // ]
- 
+]);
+// [
+//   "Deven Thompkins",
+//   0.8
+// ],
+// [
+//   "Derius Davis",
+//   0.8
+// ],
+// [
+//   "Nick Vannett",
+//   0.8
+// ],
+// [
+//   "Matt Breida",
+//   0.8
+// ],
+// [
+//   "Dyami Brown",
+//   0.8
+// ],
+// [
+//   "Lil'Jordan Humphrey",
+//   0.8
+// ],
+// [
+//   "Juwann Winfree",
+//   0.75
+// ],
+// [
+//   "Mo Alie-Cox",
+//   0.75
+// ],
+// [
+//   "Marquise Goodwin",
+//   0.75
+// ],
+// [
+//   "Pierre Strong",
+//   0.75
+// ],
+// [
+//   "Luke Schoonmaker",
+//   0.75
+// ],
+// [
+//   "Austin Hooper",
+//   0.75
+// ],
+// [
+//   "Hunter Renfrow",
+//   0.75
+// ],
+// [
+//   "Trent Sherfield",
+//   0.75
+// ],
+// [
+//   "Tyquan Thornton",
+//   0.7058823529411764
+// ],
+// [
+//   "Will Dissly",
+//   0.7058823529411764
+// ],
+// [
+//   "Jalen Nailor",
+//   0.6666666666666666
+// ],
+// [
+//   "Kyle Juszczyk",
+//   0.6666666666666666
+// ],
+// [
+//   "Ronnie Bell",
+//   0.6666666666666666
+// ],
+// [
+//   "Ke'Shawn Vaughn",
+//   0.6666666666666666
+// ],
+// [
+//   "Payne Durham",
+//   0.6666666666666666
+// ],
+// [
+//   "Rakim Jarrett",
+//   0.6666666666666666
+// ],
+// [
+//   "David Bell",
+//   0.631578947368421
+// ],
+// [
+//   "Simi Fehoko",
+//   0.631578947368421
+// ],
+// [
+//   "Stone Smartt",
+//   0.631578947368421
+// ],
+// [
+//   "Chris Rodriguez Jr.",
+//   0.631578947368421
+// ],
+// [
+//   "Josiah Deguara",
+//   0.6000000000000001
+// ],
+// [
+//   "Derek Carr",
+//   0.6000000000000001
+// ],
+// [
+//   "Kendre Miller",
+//   0.6000000000000001
+// ],
+// [
+//   "Isaiah Hodgins",
+//   0.6000000000000001
+// ],
+// [
+//   "C.J Uzomah",
+//   0.6000000000000001
+// ],
+// [
+//   "Ameer Abdullah",
+//   0.6000000000000001
+// ],
+// [
+//   "Tre Tucker",
+//   0.6000000000000001
+// ],
+// [
+//   "Pharaoh Brown",
+//   0.5454545454545454
+// ],
+// [
+//   "Ty Montgomery",
+//   0.5454545454545454
+// ],
+// [
+//   "Darnell Washington",
+//   0.5454545454545454
+// ],
+// [
+//   "Brenton Strange",
+//   0.5454545454545454
+// ],
+// [
+//   "Luke Farrell",
+//   0.5454545454545454
+// ],
+// [
+//   "Cedric Tillman",
+//   0.5
+// ],
+// [
+//   "James Proche",
+//   0.5
+// ],
+// [
+//   "N'Keal Harry",
+//   0.5
+// ],
+// [
+//   "James Mitchell",
+//   0.5
+// ],
+// [
+//   "Hunter Luepke",
+//   0.5
+// ],
+// [
+//   "Sean McKeon",
+//   0.5
+// ],
+// [
+//   "Byron Pringle",
+//   0.5
+// ],
+// [
+//   "Cole Turner",
+//   0.5
+// ],
+// [
+//   "John Bates",
+//   0.5
+// ],
+// [
+//   "Reggie Gilliam",
+//   0.5
+// ],
+// [
+//   "Chris Manhertz",
+//   0.5
+// ],
+// [
+//   "Malik Heath",
+//   0.46153846153846156
+// ],
+// [
+//   "Tucker Kraft",
+//   0.46153846153846156
+// ],
+// [
+//   "Charlie Woerner",
+//   0.46153846153846156
+// ],
+// [
+//   "Deandre Carter",
+//   0.46153846153846156
+// ],
+// [
+//   "Will Mallory",
+//   0.4
+// ],
+// [
+//   "Devin Duvernay",
+//   0.4
+// ],
+// [
+//   "Isaiah Likely",
+//   0.4
+// ],
+// [
+//   "Patrick Ricard",
+//   0.4
+// ],
+// [
+//   "Jordan Akins",
+//   0.4
+// ],
+// [
+//   "Lynn Bowden Jr.",
+//   0.4
+// ],
+// [
+//   "C.J Ham",
+//   0.3529411764705882
+// ],
+// [
+//   "Johnny Mundt",
+//   0.3529411764705882
+// ],
+// [
+//   "Ko Kieft",
+//   0.3529411764705882
+// ],
+// [
+//   "Trevon Wesco",
+//   0.3529411764705882
+// ],
+// [
+//   "Sterling Shepard",
+//   0.3529411764705882
+// ],
+// [
+//   "Michael Burton",
+//   0.3529411764705882
+// ],
+// [
+//   "Jeremy Ruckert",
+//   0.3157894736842105
+// ],
+// [
+//   "Malik Taylor",
+//   0.3157894736842105
+// ],
+// [
+//   "Jakob Johnson",
+//   0.3157894736842105
+// ],
+// [
+//   "Zamir White",
+//   0.3157894736842105
+// ],
+// [
+//   "Lawrence Cager",
+//   0.2857142857142857
+// ],
+// [
+//   "Parris Campbell",
+//   0.2857142857142857
+// ]
