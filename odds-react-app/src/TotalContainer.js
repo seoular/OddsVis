@@ -2,12 +2,11 @@ import "./styles.css";
 import React, { useState, useEffect } from "react";
 import { PlayerPosMap, slotcodes, DataPoints } from "./constants";
 import SangTable from "./SangTable";
-import {isFetchable} from './util';
+import {isFetchable, getLastElementMap} from './util';
 
 function TotalContainer() {
   const [selectedPosition, setSelectedPosition] = useState(0);
   const [playerList, setPlayerList] = useState([]);
-  const [playerDPCountMap, setPlayerDPCountMap] = useState(new Map())
   const [playerMap, setPlayerMap] = useState(new Map())
   const [selectedMode, setSelectedMode] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(11);
@@ -91,22 +90,29 @@ function TotalContainer() {
 
     let testedInts = 0;
     let lastTestedInt = 0;
-    let sangFlag = false;
+    let isNewBovadaFileCheck = false;
 
     let bovadaFileLoopFlag = true;
 
+    let playerToAnyTDDataPoints = new Map();
+    let playerToRushYdsDataPoints = new Map();
+    let playerToRecYdsDataPoints = new Map();
+    let playerToRecsDataPoints = new Map();
+    let playerToPassTDDataPoints = new Map();
+    let playerToPassYdsDataPoints = new Map();
+    let playerToIntsDataPoints = new Map();
 
     while(bovadaFileLoopFlag){
       if(testedInts > lastTestedInt){
-        sangFlag = true;        
+        isNewBovadaFileCheck = true;        
         lastTestedInt++;
       }
       await fetch('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
         .then((response) => {
-          // console.log(testedInts)
           return response.json();
         })
         .then((data) => {
+
           let allNflGames = data[0].events.slice();
           
           for (let i = 0; i < allNflGames.length; i++) {
@@ -140,39 +146,23 @@ function TotalContainer() {
               for (let j = 0; j < eachGameTDOutcomes.length; j++) {
                 let playerOdds = eachGameTDOutcomes[j];
 
-                // if(playerOdds.description == 'CJ Stroud' ||playerOdds.description ==  'C.J. Stroud'){
-                //   console.log(playerOdds.description + ' td outcomes ' + (1 / playerOdds.price.decimal) * 6)
-                // }
                 if(playerOdds.description == 'Amon-Ra St.Brown'  || playerOdds.description == 'Amon-Ra St. Brown'){
                   playerOdds.description = 'Amon-Ra St. Brown'
-                  // console.log((1 / playerOdds.price.decimal) * 6)
                 }
                 playerOdds.description = playerOdds.description.replace(/\./g, '').replace(/ jr/i, '')
                 if (playerOdds.description == 'AJ Brown '){
                   playerOdds.description = playerOdds.description.slice(0, -1)
-                }
-
-
-                if( !amonRaFlag ) {
-                  if(sangFlag && sangPProps.has(playerOdds.description)){
-                    //compare to past value future functionality
-                    sangPProps.delete(playerOdds.description)
-                    dpCountMap.delete(playerOdds.description)                    
-                    playerToDPListMap.delete(name)
-                    sangFlag = false;
+                }                
+                
+                
+                if( !amonRaFlag ) { 
+                  let newAnyTDList = []
+                  if (playerToAnyTDDataPoints.has(playerOdds.description)) {
+                    newAnyTDList = playerToAnyTDDataPoints.get(playerOdds.description).slice()
+                   
                   }
-                  
-                  sangPProps.set(
-                    playerOdds.description,
-                    (1 / playerOdds.price.decimal) * 6
-                  );
-
-    
-                  dpCountMap.set(
-                    playerOdds.description,
-                    1
-                  )
-                  playerToDPListMap.set(playerOdds.description, [DataPoints.AnyTD])
+                  newAnyTDList.push((1 / playerOdds.price.decimal) * 6)
+                  playerToAnyTDDataPoints.set(playerOdds.description, newAnyTDList)
                 }
 
                 if (name == 'Amon-Ra St. Brown'){
@@ -186,9 +176,6 @@ function TotalContainer() {
               for (let j = 0; j < eachGameRushingOutcomes.length; j++) {
                 let playerOdds = eachGameRushingOutcomes[j];
                 let name = playerOdds.description.slice(22);
-                // if(name == 'CJ Stroud' ||name ==  'C.J. Stroud'){
-                //   console.log(name + ' rush outcomes ' + playerOdds.outcomes[0].price.handicap / 10)
-                // }
                 if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
                   name = 'Amon-Ra St. Brown'
                 }
@@ -196,45 +183,17 @@ function TotalContainer() {
                 if (name == 'AJ Brown '){
                   name = name.slice(0, -1)
                 }
-                let temp = sangPProps.get(name);
-                if (typeof temp == "undefined") {
-                  temp = 0;
-                } 
+
+                
                 if( !amonRaFlag ) {
-
-                  if(sangFlag && sangPProps.has(name)){
-                    //compare to past value future functionality
-                    sangPProps.delete(name)
-                    dpCountMap.delete(name)                    
-                    playerToDPListMap.delete(name)
-                    sangFlag = false;
+        
+                  let newRushYdsList = []
+                  if (playerToRushYdsDataPoints.has(name)) {
+                    newRushYdsList = playerToRushYdsDataPoints.get(name)
                   }
+                  newRushYdsList.push(playerOdds.outcomes[0].price.handicap / 10)
+                  playerToRushYdsDataPoints.set(name, newRushYdsList)
 
-                  if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.RushYds)){
-                    sangPProps.set(
-                      name,
-                      temp + playerOdds.outcomes[0].price.handicap / 10
-                    );             
-  
-                    let tempCount = dpCountMap.get(name);
-                    if( typeof tempCount == "undefined"){
-                      tempCount = 0;
-                    }
-                   
-  
-                    dpCountMap.set(
-                      name,
-                      tempCount + 1
-                    )
-                    let tempDPList = playerToDPListMap.get(name)
-                    if( typeof tempDPList == 'undefined'){
-                      tempDPList = []
-                    }
-                    playerToDPListMap.set(
-                      name,
-                      tempDPList.concat([DataPoints.RushYds])
-                    )
-                  }
                   
                 }
                 if (name == 'Amon-Ra St. Brown'){
@@ -247,9 +206,6 @@ function TotalContainer() {
               for (let j = 0; j < eachGameReceivingOutcomes.length; j++) {
                 let playerOdds = eachGameReceivingOutcomes[j];
                 let name = playerOdds.description.slice(24);
-                // if(name == 'CJ Stroud' || name == 'C.J. Stroud'){
-                //   console.log(name + ' recyd outcomes ' + playerOdds.outcomes[0].price.handicap / 10)
-                // }
                 if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
                   name = 'Amon-Ra St. Brown'
                   // console.log(playerOdds.outcomes[0].price.handicap / 10)
@@ -258,43 +214,17 @@ function TotalContainer() {
                 if (name == 'AJ Brown '){
                   name = name.slice(0, -1)
                 }
-                let temp = sangPProps.get(name);
-                if (typeof temp == "undefined") {
-                  temp = 0;
-                }
+
                 if( !amonRaFlag ) {
-                  if(sangFlag && sangPProps.has(name)){
-                    //compare to past value future functionality
-                    sangPProps.delete(name)
-                    dpCountMap.delete(name)
-                    playerToDPListMap.delete(name)
-                    sangFlag = false;
+
+
+                  let newRecYdsList = []
+                  if (playerToRecYdsDataPoints.has(name)) {
+                    newRecYdsList = playerToRecYdsDataPoints.get(name)
                   }
-                  if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.RecYds)){
+                  newRecYdsList.push(playerOdds.outcomes[0].price.handicap / 10)
+                  playerToRecYdsDataPoints.set(name, newRecYdsList)
 
-                    sangPProps.set(
-                      name,
-                      temp + playerOdds.outcomes[0].price.handicap / 10
-                    );
-
-                    let tempCount = dpCountMap.get(name);
-                    if( typeof tempCount == "undefined"){
-                      tempCount = 0;
-                    }
-
-                    dpCountMap.set(
-                      name,
-                      tempCount + 1
-                    )
-                    let tempDPList = playerToDPListMap.get(name)
-                    if( typeof tempDPList == 'undefined'){
-                      tempDPList = []
-                    }
-                    playerToDPListMap.set(
-                      name,
-                      tempDPList.concat([DataPoints.RecYds])
-                    )
-                  }
                 }
                 if (name == 'Amon-Ra St. Brown'){
                   amonRaFlag = true;
@@ -307,55 +237,24 @@ function TotalContainer() {
               for (let j = 0; j < eachGameReceptionOutcomes.length; j++) {
                 let playerOdds = eachGameReceptionOutcomes[j];
                 let name = playerOdds.description.slice(19);
-                // if(name == 'CJ Stroud' || name == 'C.J. Stroud'){
-                //   console.log(name + ' reception outcomes ' + playerOdds.outcomes[0].price.handicap * receptionMultiplier)
-                // }
                 if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
                   name = 'Amon-Ra St. Brown'
-                  // console.log(playerOdds.outcomes[0].price.handicap * receptionMultiplier)
                 } 
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
                 if (name == 'AJ Brown '){
                   name = name.slice(0, -1)
                 }
-                let temp = sangPProps.get(name);
 
-                if (typeof temp == "undefined") {
-                  temp = 0;
-                }
                 if( !amonRaFlag ) {
-                  if(sangFlag && sangPProps.has(name)){
-                    //compare to past value future functionality
-                    sangPProps.delete(name)
-                    dpCountMap.delete(name)
-                    playerToDPListMap.delete(name)
-                    sangFlag = false;
+
+ 
+                  let newRecsList = []
+                  if (playerToRecsDataPoints.has(name)) {
+                    newRecsList = playerToRecsDataPoints.get(name)
                   }
-                  if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.Recs)){
+                  newRecsList.push(playerOdds.outcomes[0].price.handicap * receptionMultiplier)
+                  playerToRecsDataPoints.set(name, newRecsList)
 
-                    sangPProps.set(
-                      name,
-                      temp + playerOdds.outcomes[0].price.handicap * receptionMultiplier
-                    );
-
-                    let tempCount = dpCountMap.get(name);
-                    if( typeof tempCount == "undefined"){
-                      tempCount = 0;
-                    }
-
-                    dpCountMap.set(
-                      name,
-                      tempCount + 1
-                    )
-                    let tempDPList = playerToDPListMap.get(name)
-                    if( typeof tempDPList == 'undefined'){
-                      tempDPList = []
-                    }
-                    playerToDPListMap.set(
-                      name,
-                      tempDPList.concat([DataPoints.Recs])
-                    )
-                  }
                 }
 
                 if (name == 'Amon-Ra St. Brown'){                
@@ -367,172 +266,129 @@ function TotalContainer() {
               for (let j = 0; j < eachGamePassingYdOutcomes.length; j++) {
                 let playerOdds = eachGamePassingYdOutcomes[j];
                 let name = playerOdds.description.slice(22);
-                // if(name == 'CJ Stroud' || name == 'C.J. Stroud'){
-                //   console.log(name + ' passyd outcomes ' + playerOdds.outcomes[0].price.handicap / 25)
-                // }
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
                 if (name == 'AJ Brown '){
                   name = name.slice(0, -1)
                 }
-                let temp = sangPProps.get(name);
-                if (typeof temp == "undefined") {
-                  temp = 0;
-                }
-                if(sangFlag && sangPProps.has(name)){
-                  //compare to past value future functionality
-                  sangPProps.delete(name)
-                  dpCountMap.delete(name)
-                  playerToDPListMap.delete(name)
-                  sangFlag = false;
-                }
-                if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.PassYds)){
 
-                  sangPProps.set(
-                    name,
-                    temp + playerOdds.outcomes[0].price.handicap / 25
-                  );
 
-                  let tempCount = dpCountMap.get(name);
-                  if( typeof tempCount == "undefined"){
-                    tempCount = 0;
-                  }
 
-                  dpCountMap.set(
-                    name,
-                    tempCount + 1
-                  )
-                  let tempDPList = playerToDPListMap.get(name)
-                  if( typeof tempDPList == 'undefined'){
-                    tempDPList = []
-                  }
-                  playerToDPListMap.set(
-                    name,
-                    tempDPList.concat([DataPoints.PassYds])
-                  )
+                let newPassYdsList = []
+                if (playerToPassYdsDataPoints.has(name)) {
+                  newPassYdsList = playerToPassYdsDataPoints.get(name)
                 }
+                newPassYdsList.push(playerOdds.outcomes[0].price.handicap /25)
+                playerToPassYdsDataPoints.set(name, newPassYdsList)
+
               }
             }
             if (typeof eachGamePassingTDOutcomes !== "undefined") {
               for (let j = 0; j < eachGamePassingTDOutcomes.length; j++) {
                 let playerOdds = eachGamePassingTDOutcomes[j];
                 let name = playerOdds.description.slice(27);
-                // if(name == 'CJ Stroud' || name == 'C.J. Stroud'){
-                //   console.log(name + ' passtd outcomes ' + playerOdds.outcomes[0].price.handicap * 4)
-                // }
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
                 if (name == 'AJ Brown '){
                   name = name.slice(0, -1)
                 }
-                let temp = sangPProps.get(name);
-                if (typeof temp == "undefined") {
-                  temp = 0;
-                }
-                if(sangFlag && sangPProps.has(name)){
-                  //compare to past value future functionality
-                  sangPProps.delete(name)
-                  dpCountMap.delete(name)
-                  playerToDPListMap.delete(name)
-                  sangFlag = false;
-                }
-                if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.PassTD)){
 
-                  sangPProps.set(
-                    name,
-                    temp + playerOdds.outcomes[0].price.handicap * 4
-                  );
-
-                  let tempCount = dpCountMap.get(name);
-                  if( typeof tempCount == "undefined"){
-                    tempCount = 0;
-                  }
-
-                  dpCountMap.set(
-                    name,
-                    tempCount + 1
-                  )
-                  let tempDPList = playerToDPListMap.get(name)
-                  if( typeof tempDPList == 'undefined'){
-                    tempDPList = []
-                  }
-                  playerToDPListMap.set(
-                    name,
-                    tempDPList.concat([DataPoints.PassTD])
-                  )
+                let newPassTdsList = []
+                if (playerToPassTDDataPoints.has(name)) {
+                  newPassTdsList = playerToPassTDDataPoints.get(name)
                 }
+                newPassTdsList.push(playerOdds.outcomes[0].price.handicap *4)
+                playerToPassTDDataPoints.set(name, newPassTdsList)
+
               }
             }
             if (typeof eachGameIntOutcomes !== "undefined") {
               for (let j = 0; j < eachGameIntOutcomes.length; j++) {
                 let playerOdds = eachGameIntOutcomes[j];
                 let name = playerOdds.description.slice(29);
-                // if(name == 'CJ Stroud' || name ==  'C.J. Stroud'){
-                //   console.log(name + ' int outcomes ' + playerOdds.outcomes[0].price.handicap * -2)
-                //   console.log(sangPProps.has(name) + ' ' +  sangFlag)
-                // }
                 name = name.replace(/\./g, '').replace(/ jr/i, '')
                 if (name == 'AJ Brown '){
                   name = name.slice(0, -1)
                 }
-                let temp = sangPProps.get(name);
-                if (typeof temp == "undefined") {
-                  temp = 0;
-                }
-                if(sangFlag && sangPProps.has(name)){
-                  //compare to past value future functionality
-                  sangPProps.delete(name)
-                  dpCountMap.delete(name)
-                  playerToDPListMap.delete(name)
-                  sangFlag = false;
-                }
-                if(typeof playerToDPListMap.get(name) !== 'undefined' && !playerToDPListMap.get(name).includes(DataPoints.Ints)){
+               
+                let newIntsList = []
 
-                  sangPProps.set(
-                    name,
-                    temp + playerOdds.outcomes[0].price.handicap * -2
-                  );
-                  let tempDPList = playerToDPListMap.get(name)
-                  if( typeof tempDPList == 'undefined'){
-                    tempDPList = []
-                  }
-                  playerToDPListMap.set(
-                    name,
-                    tempDPList.concat([DataPoints.Ints])
-                  )
-                  // if(name == 'CJ Stroud' || name ==  'C.J. Stroud'){
-                  //   console.log('postcheck ' + sangPProps.has(name) + ' ' +  sangFlag)
-                  // }
+                if (playerToIntsDataPoints.has(name)) {
+                  newIntsList = playerToIntsDataPoints.get(name)
                 }
+                newIntsList.push(playerOdds.outcomes[0].price.handicap *-2)
+                playerToIntsDataPoints.set(name, newIntsList)
+
               }
             }
           }
-
-          // console.log(Array.from(dpCountMap.entries()).sort((a, b) => b[1] - a[1]))
-          // console.log(Array.from(sangPProps.entries()).sort((a, b) => b[1] - a[1]))
-
-          const mapEntries = Array.from(sangPProps.entries());
-          // Sort the array based on the numeric value (assuming values are numbers)
-          mapEntries.sort((a, b) => b[1] - a[1]);
-          // Create a new Map from the sorted array
-          const sortedMap = new Map(mapEntries);
-          let finalList = Array.from(sortedMap.entries()).filter(
-            (x) =>
-              typeof PlayerPosMap.get(x[0]) !== "undefined" &&
-              (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
-              x[1] > 5
-          );
-
-          setPlayerDPCountMap(dpCountMap)
-          setPlayerList(finalList);
         }).catch((e) => {
-          //console.log(e)
+          // console.log('Index of page not factored in: ' + testedInts)
         });
 
 
       testedInts++;
-      sangFlag = false;
+      isNewBovadaFileCheck = false;
       // console.log('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
       bovadaFileLoopFlag = await isFetchable('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
     }
+    
+    let playerToAnyTD = getLastElementMap(playerToAnyTDDataPoints);
+    let playerToRushYds = getLastElementMap(playerToRushYdsDataPoints);
+    let playerToRecYds = getLastElementMap(playerToRecYdsDataPoints);
+    let playerToRecs = getLastElementMap(playerToRecsDataPoints);
+    let playerToPassTD = getLastElementMap(playerToPassTDDataPoints);
+    let playerToPassYds = getLastElementMap(playerToPassYdsDataPoints);
+    let playerToInts = getLastElementMap(playerToIntsDataPoints);
+
+    let finalPlayerToEV = new Map()
+    let finalPlayerToDPCount = new Map()
+    function sumPlayerEVs(){
+      Array.from(arguments).forEach((arg) => {
+        arg.forEach((value, key) => {
+          let temp = value;
+          if(finalPlayerToEV.has(key)){
+            temp = finalPlayerToEV.get(key)
+            temp += value
+          }
+          finalPlayerToEV.set(key, temp)
+        })
+      })      
+    }
+    function sumPlayerDP(){
+      Array.from(arguments).forEach((arg) => {
+        arg.forEach((value, key) => {
+          let temp = 1;
+          if(finalPlayerToDPCount.has(key)){
+            temp = finalPlayerToDPCount.get(key)
+            temp++
+          }
+          finalPlayerToDPCount.set(key, temp)
+        })
+      })  
+    }
+    sumPlayerEVs(playerToAnyTD, playerToRushYds, playerToRecYds, playerToRecs, playerToPassTD, playerToPassYds, playerToInts)
+    sumPlayerDP(playerToAnyTD, playerToRushYds, playerToRecYds, playerToRecs, playerToPassTD, playerToPassYds, playerToInts)
+    
+    const mapEntries = Array.from(finalPlayerToEV.entries());  
+    // Sort the array based on the numeric value (assuming values are numbers)
+    mapEntries.sort((a, b) => b[1] - a[1]);
+    // Create a new Map from the sorted array
+    const sortedMap = new Map(mapEntries);
+    let finalList = Array.from(sortedMap.entries()).filter(
+      (x) =>
+        typeof PlayerPosMap.get(x[0]) !== "undefined" &&
+        (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
+        x[1] > 5
+    );
+    if(pos == 0){
+      finalList = finalList.filter((d) => {
+        return finalPlayerToDPCount.get(d[0]) >= 4
+      })
+    } else {
+      finalList = finalList.filter((d) => {
+        return finalPlayerToDPCount.get(d[0]) >= 3
+      })
+    } 
+    setPlayerList(finalList);
   };
 
   useEffect(() => {
@@ -590,7 +446,7 @@ function TotalContainer() {
             <option value="10">Week 10</option>
           </select>
         </div>
-        <SangTable  evList={playerList} espnPlayerMap={playerMap} dpCountMap={playerDPCountMap} />
+        <SangTable  evList={playerList} espnPlayerMap={playerMap} />
     
       
       </div>
