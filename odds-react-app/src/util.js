@@ -114,3 +114,25 @@ export async function isFetchable(url) {
     return false;
   }
 }
+
+export function getLastElementMap(inputMap) {
+  // Create a new Map to store the result
+  let resultMap = new Map();
+
+  // Iterate over the entries in the inputMap
+  inputMap.forEach((valueList, key) => {
+    // Check if the valueList is not empty
+    if (valueList.length > 0) {
+      // Get the last element of the valueList
+      let lastElement = valueList[valueList.length - 1];
+      
+      // Set the key-value pair in the resultMap
+      resultMap.set(key, lastElement);
+    } else {
+      // If the valueList is empty, set the key with undefined in the resultMap
+      resultMap.set(key, undefined);
+    }
+  });
+
+  return resultMap;
+}
