@@ -13,7 +13,7 @@ jobs:
     - name: Fetch data from URL
       run: |
         # Replace YOUR_HARD_CODED_URL with the actual URL
-        FetchedData=$(curl -sL "YOUR_HARD_CODED_URL")
+        FetchedData=$(curl -sL "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl")
 
         # Determine the filename with an updated counter
         DirectoryPath="$GITHUB_WORKSPACE/testBovadaFileAutoFetch"
