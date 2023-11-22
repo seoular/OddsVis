@@ -9,7 +9,7 @@ function TotalContainer() {
   const [playerList, setPlayerList] = useState([]);
   const [playerMap, setPlayerMap] = useState(new Map())
   const [selectedMode, setSelectedMode] = useState(0);
-  const [selectedWeek, setSelectedWeek] = useState(11);
+  const [selectedWeek, setSelectedWeek] = useState(12);
 
   // console.log(isFetchable('https://raw.githubusercontent.com/seoular/test/main/bovada5'))
 
