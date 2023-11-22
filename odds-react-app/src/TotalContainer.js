@@ -72,10 +72,6 @@ function TotalContainer() {
   };
 
   const scrapeData = async (pos, mode, week) => {
-    const sangPProps = new Map();
-    const dpCountMap = new Map();
-    const playerToDPListMap = new Map();
-
     let receptionMultiplier = .5;
 
 
@@ -476,6 +472,7 @@ function TotalContainer() {
             }}
             style={{ display: "flex", marginLeft: "20px" }}
           >
+            <option value="12">Week 12</option>
             <option value="11">Week 11</option>
             <option value="10">Week 10</option>
           </select>
@@ -485,7 +482,7 @@ function TotalContainer() {
       
       </div>
       <div class="updateTimeSection" >
-        EV values last updated Monday, 11/18 at 4:05pm ET
+        EV values last updated Wednesday, 11/22 at 5:11pm ET
       </div>
       <div class="patreonSection">
         <div>
