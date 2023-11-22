@@ -405,13 +405,38 @@ function TotalContainer() {
     );
     if(pos == 0){
       finalList = finalList.filter((d) => {
-        return finalPlayerToDPCount.get(d[0]) >= 4
+        let qbHasAllValues = playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToPassTD.has(d[0]) && playerToPassYds.has(d[0]) && playerToInts.has(d[0])
+        return qbHasAllValues
       })
-    } else {
+    } else if (pos == 1) {
       finalList = finalList.filter((d) => {
-        return finalPlayerToDPCount.get(d[0]) >= 3
+        let rbHasAllValues = playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0])
+        return rbHasAllValues
       })
-    } 
+    } else if (pos == 2 || pos == 3) {
+      finalList = finalList.filter((d) => {
+        let WRHasAllValues = playerToAnyTD.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]) 
+        return WRHasAllValues
+      })
+    } else if (pos == 98) {
+      finalList = finalList.filter((d) => {
+        let flexHasAllValues = (playerToAnyTD.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]) 
+                                ||
+                                playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]))
+        return flexHasAllValues
+      })
+    } else if (pos == 99) {
+      finalList = finalList.filter((d) => {
+        let flexHasAllValues = (playerToAnyTD.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]) 
+                                ||
+                                playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0])
+                                ||
+                                playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToPassTD.has(d[0]) && playerToPassYds.has(d[0]) && playerToInts.has(d[0]))
+        
+        return flexHasAllValues
+      })
+    }
+  
     finalList = finalList.map((elem) => {
         return [elem[0], {
             ev: elem[1],
