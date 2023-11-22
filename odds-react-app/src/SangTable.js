@@ -20,10 +20,11 @@ export default function SangTable(props) {
 
     setVisList(
       list.map((d) => {
-        let percentile = calculatePercentile(mean, stdDev, d[1]) * 100;
+        let percentile = calculatePercentile(mean, stdDev, d[1].ev) * 100;
         return {
           playerName: d[0],
-          playerEV: d[1],
+          playerEV: d[1].ev,
+          playerChange: d[1].change,
           calculatedColor: rainbow(100 - percentile),
           espnValues: espnPlayerMap.get(d[0]),
           percentile: percentile
@@ -58,7 +59,15 @@ export default function SangTable(props) {
             }}
           >
             EV
-          </th>          
+          </th>   
+          <th
+            class='invis-mobile-header'
+            style={{
+              width: "16px"
+            }}
+          >
+            Δ
+          </th>        
           {getQueryStringValue('isPro')=='thanksdude' ? (
             <>
               <th
@@ -125,6 +134,32 @@ export default function SangTable(props) {
               }}
             >
               {<div>{x.playerEV.toFixed(2)}</div>}
+            </td>   
+            <td
+              class='invis-mobile'
+              style={{
+                backgroundColor: 'white',
+                color: 
+                  x.playerChange > 0 ? "limegreen" : x.playerChange == 0 ? "black" : "red",
+                border: 'none',
+                borderRadius: "10px",
+                width: "60px"
+              }}
+            >
+              {x.playerChange !== 0 ? 
+                <div
+                    style={{
+                        marginTop: '2px',
+                        fontSize: 'small'
+                    }}
+                
+                >{((x.playerChange / x.playerEV)*100).toFixed(1)}%</div> : 
+                <div
+                    style={{
+                        marginTop: '3px',
+                        fontSize: 'small'
+                    }}
+                >{'0'}</div>}
             </td>            
             {/* {true ?  */}
             {getQueryStringValue('isPro')=='thanksdude' ? 
