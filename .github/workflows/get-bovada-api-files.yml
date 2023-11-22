@@ -24,11 +24,11 @@ jobs:
         Counter=$(($(ls "$DirectoryPath" | grep -c '^fetched_data_') + 1))
         FileName="fetched_data_$Counter.txt"
 
-    # Debug: Print filename
-    echo "Filename: $FileName"
-
-    # Create a new file with fetched data in the specified directory
-    printf "%s" "$FetchedData" > "$DirectoryPath/$FileName"
+        # Debug: Print filename
+        echo "Filename: $FileName"
+    
+        # Create a new file with fetched data in the specified directory
+        printf "%s" "$FetchedData" > "$DirectoryPath/$FileName"
 
     - name: Commit changes
       run: |
