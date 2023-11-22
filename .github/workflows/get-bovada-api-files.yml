@@ -1,9 +1,7 @@
 name: Get Bovada API Files
 
-on:
-  schedule:
-    - cron: '0 * * * *' # Run every hour
-
+on: workflow_dispatch
+  
 jobs:
   fetch-and-create-file:
     runs-on: ubuntu-latest
