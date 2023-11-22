@@ -15,13 +15,20 @@ jobs:
         # Replace YOUR_HARD_CODED_URL with the actual URL
         FetchedData=$(curl -sL "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl")
 
+        # Debug: Print fetched data
+        echo "Fetched Data:"
+        echo "$FetchedData"
+    
         # Determine the filename with an updated counter
         DirectoryPath="$GITHUB_WORKSPACE/testBovadaFileAutoFetch"
         Counter=$(($(ls "$DirectoryPath" | grep -c '^fetched_data_') + 1))
         FileName="fetched_data_$Counter.txt"
 
-        # Create a new file with fetched data in the specified directory
-        printf "%s" "$FetchedData" > "$DirectoryPath/$FileName"
+    # Debug: Print filename
+    echo "Filename: $FileName"
+
+    # Create a new file with fetched data in the specified directory
+    printf "%s" "$FetchedData" > "$DirectoryPath/$FileName"
 
     - name: Commit changes
       run: |
