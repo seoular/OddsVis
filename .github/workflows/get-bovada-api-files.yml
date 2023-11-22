@@ -16,7 +16,7 @@ jobs:
         FetchedData=$(curl -sL "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl")
 
         # Replace YOUR_DIRECTORY_PATH with the actual directory path
-        DirectoryPath="${{ github.repository }}/testBovadaFileAutoFetch/"
+        DirectoryPath="$GITHUB_WORKSPACE/testBovadaFileAutoFetch/"
 
         # Determine the filename with an updated counter
         Counter=$(($(ls "$DirectoryPath" | grep -c '^fetched_data_') + 1))
