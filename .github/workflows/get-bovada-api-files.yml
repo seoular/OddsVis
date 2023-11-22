@@ -21,7 +21,7 @@ jobs:
         FileName="fetched_data_$Counter.txt"
 
         # Create a new file with fetched data in the specified directory
-        echo "$FetchedData" > "$DirectoryPath/$FileName"
+        printf "%s" "$FetchedData" > "$DirectoryPath/$FileName"
 
     - name: Commit changes
       run: |
