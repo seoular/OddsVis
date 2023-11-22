@@ -2,7 +2,7 @@ import "./styles.css";
 import React, { useState, useEffect } from "react";
 import { PlayerPosMap, slotcodes, DataPoints } from "./constants";
 import SangTable from "./SangTable";
-import {isFetchable, getLastElementMap} from './util';
+import {isFetchable, getLastElementMap,calculateLatestChange} from './util';
 
 function TotalContainer() {
   const [selectedPosition, setSelectedPosition] = useState(0);
@@ -339,8 +339,17 @@ function TotalContainer() {
     let playerToPassYds = getLastElementMap(playerToPassYdsDataPoints);
     let playerToInts = getLastElementMap(playerToIntsDataPoints);
 
+    let latestCPlayerToAnyTD = calculateLatestChange(playerToAnyTDDataPoints)
+    let latestCPlayerToRushYds = calculateLatestChange(playerToRushYdsDataPoints);
+    let latestCPlayerToRecYds = calculateLatestChange(playerToRecYdsDataPoints);
+    let latestCPlayerToRecs = calculateLatestChange(playerToRecsDataPoints);
+    let latestCPlayerToPassTD = calculateLatestChange(playerToPassTDDataPoints);
+    let latestCPlayerToPassYds = calculateLatestChange(playerToPassYdsDataPoints);
+    let latestCPlayerToInts = calculateLatestChange(playerToIntsDataPoints);
+
     let finalPlayerToEV = new Map()
     let finalPlayerToDPCount = new Map()
+    let finalCPlayer = new Map()
     function sumPlayerEVs(){
       Array.from(arguments).forEach((arg) => {
         arg.forEach((value, key) => {
@@ -353,6 +362,18 @@ function TotalContainer() {
         })
       })      
     }
+    function sumPlayerChanges(){
+        Array.from(arguments).forEach((arg) => {
+          arg.forEach((value, key) => {
+            let temp = value;
+            if(finalCPlayer.has(key)){
+              temp = finalCPlayer.get(key)
+              temp += value
+            }
+            finalCPlayer.set(key, temp)
+          })
+        })      
+      }
     function sumPlayerDP(){
       Array.from(arguments).forEach((arg) => {
         arg.forEach((value, key) => {
@@ -367,6 +388,7 @@ function TotalContainer() {
     }
     sumPlayerEVs(playerToAnyTD, playerToRushYds, playerToRecYds, playerToRecs, playerToPassTD, playerToPassYds, playerToInts)
     sumPlayerDP(playerToAnyTD, playerToRushYds, playerToRecYds, playerToRecs, playerToPassTD, playerToPassYds, playerToInts)
+    sumPlayerChanges(latestCPlayerToAnyTD, latestCPlayerToRushYds, latestCPlayerToRecYds, latestCPlayerToRecs, latestCPlayerToPassTD, latestCPlayerToPassYds, latestCPlayerToInts)
     
     const mapEntries = Array.from(finalPlayerToEV.entries());  
     // Sort the array based on the numeric value (assuming values are numbers)
@@ -388,6 +410,12 @@ function TotalContainer() {
         return finalPlayerToDPCount.get(d[0]) >= 3
       })
     } 
+    finalList = finalList.map((elem) => {
+        return [elem[0], {
+            ev: elem[1],
+            change: finalCPlayer.get(elem[0])
+        }]
+    })
     setPlayerList(finalList);
   };
 
