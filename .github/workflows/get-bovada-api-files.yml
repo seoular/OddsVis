@@ -1,7 +1,7 @@
-name: Get Bovada API Files
+name: Fetch and Create File Hourly
 
 on: workflow_dispatch
-  
+
 jobs:
   fetch-and-create-file:
     runs-on: ubuntu-latest
@@ -13,16 +13,14 @@ jobs:
     - name: Fetch data from URL
       run: |
         # Replace YOUR_HARD_CODED_URL with the actual URL
-        FetchedData=$(curl -sL "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl")
-
-        # Replace YOUR_DIRECTORY_PATH with the actual directory path
-        DirectoryPath="$GITHUB_WORKSPACE/testBovadaFileAutoFetch/"
+        FetchedData=$(curl -sL "YOUR_HARD_CODED_URL")
 
         # Determine the filename with an updated counter
+        DirectoryPath="$GITHUB_WORKSPACE/testBovadaFileAutoFetch"
         Counter=$(($(ls "$DirectoryPath" | grep -c '^fetched_data_') + 1))
         FileName="fetched_data_$Counter.txt"
 
-        # Create a new file with fetched data
+        # Create a new file with fetched data in the specified directory
         echo "$FetchedData" > "$DirectoryPath/$FileName"
 
     - name: Commit changes
@@ -30,7 +28,7 @@ jobs:
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
 
-        # Add the newly created file
+        # Add the newly created file in the specified directory
         git add "$DirectoryPath/$FileName"
 
         # Commit the changes
