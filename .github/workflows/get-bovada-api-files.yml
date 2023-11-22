@@ -1,0 +1,44 @@
+name: Get Bovada API Files
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Run every hour
+
+jobs:
+  fetch-and-create-file:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Fetch data from URL
+      run: |
+        # Replace YOUR_HARD_CODED_URL with the actual URL
+        FetchedData=$(curl -sL "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl")
+
+        # Replace YOUR_DIRECTORY_PATH with the actual directory path
+        DirectoryPath="${{ github.repository }}/testBovadaFileAutoFetch"
+
+        # Determine the filename with an updated counter
+        Counter=$(($(ls "$DirectoryPath" | grep -c '^fetched_data_') + 1))
+        FileName="fetched_data_$Counter.txt"
+
+        # Create a new file with fetched data
+        echo "$FetchedData" > "$DirectoryPath/$FileName"
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+
+        # Add the newly created file
+        git add "$DirectoryPath/$FileName"
+
+        # Commit the changes
+        git commit -m "Add fetched data with counter $Counter" -a
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
