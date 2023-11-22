@@ -1,6 +1,6 @@
 import "./styles.css";
 import React, { useState, useEffect } from "react";
-import { PlayerPosMap, slotcodes, DataPoints } from "./constants";
+import { PlayerPosMap, slotcodes, UNIVERSAL_VIG } from "./constants";
 import SangTable from "./SangTable";
 import {isFetchable, getLastElementMap,calculateLatestChange} from './util';
 
@@ -161,7 +161,7 @@ function TotalContainer() {
                     newAnyTDList = playerToAnyTDDataPoints.get(playerOdds.description).slice()
                    
                   }
-                  newAnyTDList.push((1 / playerOdds.price.decimal) * 6)
+                  newAnyTDList.push(((1 / playerOdds.price.decimal)/UNIVERSAL_VIG) * 6)
                   playerToAnyTDDataPoints.set(playerOdds.description, newAnyTDList)
                 }
 
@@ -252,7 +252,9 @@ function TotalContainer() {
                   if (playerToRecsDataPoints.has(name)) {
                     newRecsList = playerToRecsDataPoints.get(name)
                   }
-                  newRecsList.push(playerOdds.outcomes[0].price.handicap * receptionMultiplier)
+                  let handicap = playerOdds.outcomes[0].price.handicap
+                  handicap = handicap - .5 + ((1 / playerOdds.outcomes[0].price.decimal) / UNIVERSAL_VIG)
+                  newRecsList.push(handicap * receptionMultiplier)
                   playerToRecsDataPoints.set(name, newRecsList)
 
                 }
@@ -295,7 +297,9 @@ function TotalContainer() {
                 if (playerToPassTDDataPoints.has(name)) {
                   newPassTdsList = playerToPassTDDataPoints.get(name)
                 }
-                newPassTdsList.push(playerOdds.outcomes[0].price.handicap *4)
+                let handicap = playerOdds.outcomes[0].price.handicap
+                handicap = handicap - .5 + ((1 / playerOdds.outcomes[0].price.decimal) / UNIVERSAL_VIG)
+                newPassTdsList.push(handicap * 4)
                 playerToPassTDDataPoints.set(name, newPassTdsList)
 
               }
@@ -314,7 +318,9 @@ function TotalContainer() {
                 if (playerToIntsDataPoints.has(name)) {
                   newIntsList = playerToIntsDataPoints.get(name)
                 }
-                newIntsList.push(playerOdds.outcomes[0].price.handicap *-2)
+                let handicap = playerOdds.outcomes[0].price.handicap
+                handicap = handicap - .5 + ((1 / playerOdds.outcomes[0].price.decimal) / UNIVERSAL_VIG)
+                newIntsList.push(handicap *-2)
                 playerToIntsDataPoints.set(name, newIntsList)
 
               }
