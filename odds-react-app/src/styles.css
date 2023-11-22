@@ -56,3 +56,19 @@
   opacity: 1;
   right: 0;
 }
+
+.invis-mobile{
+  display: none
+}
+
+.invis-mobile-header{
+  display: none
+}
+@media screen and (min-width: 480px) {
+  .invis-mobile-header{
+    display: table-cell;
+  }
+  .invis-mobile{
+    display: block;
+  }
+}
