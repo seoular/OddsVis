@@ -17,7 +17,7 @@ jobs:
         # Determine the filename with an updated counter
         DirectoryPath="$GITHUB_WORKSPACE/testBovadaFileAutoFetch"
         Counter=$(($(ls "$DirectoryPath" | grep -c '^fetched_data_') + 1))
-        FileName="fetched_data_$Counter.txt"
+        FileName="fetched_data_$Counter"
 
         echo "$(<data.txt)" > "$DirectoryPath/$FileName"
 
