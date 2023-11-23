@@ -19,7 +19,7 @@ jobs:
         git config --local user.name "GitHub Actions"
 
         # Add the newly created file in the specified directory
-        git add "$GITHUB_WORKSPACE/testBovadaFileAutoFetch/sang"
+        git add "$GITHUB_WORKSPACE/testBovadaFileAutoFetch/sang2"
 
         # Commit the changes
         git commit -m "Add fetched data with counter" -a
