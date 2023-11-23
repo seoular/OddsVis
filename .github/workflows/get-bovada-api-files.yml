@@ -11,24 +11,15 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Fetch data from URL
-      run: |
-        # Replace YOUR_HARD_CODED_URL with the actual URL
-        FetchedData=$(curl -sL "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl")
-
-        # Debug: Print fetched data
-        echo "Fetched Data:"
-        echo "$FetchedData"
-    
+      run: |        
+        curl -L -o data.txt https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl        
+        
         # Determine the filename with an updated counter
         DirectoryPath="$GITHUB_WORKSPACE/testBovadaFileAutoFetch"
         Counter=$(($(ls "$DirectoryPath" | grep -c '^fetched_data_') + 1))
         FileName="fetched_data_$Counter.txt"
 
-        # Debug: Print filename
-        echo "Filename: $FileName"
-    
-        # Create a new file with fetched data in the specified directory
-        printf "%s" "$FetchedData" > "$DirectoryPath/$FileName"
+        echo "$(<data.txt)" > "$DirectoryPath/$FileName"
 
     - name: Commit changes
       run: |
