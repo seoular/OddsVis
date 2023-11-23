@@ -12,7 +12,7 @@ jobs:
 
     - name: Fetch data from URL
       run: |        
-        curl -L https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl  > "$GITHUB_WORKSPACE/testBovadaFileAutoFetch/sang"        
+        echo (curl -L https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl)  > "$GITHUB_WORKSPACE/testBovadaFileAutoFetch/sang"        
 
     - name: Commit changes
       run: |
