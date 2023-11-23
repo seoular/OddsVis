@@ -12,14 +12,7 @@ jobs:
 
     - name: Fetch data from URL
       run: |        
-        curl -L -o data.txt https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl        
-        
-        # Determine the filename with an updated counter
-        DirectoryPath="$GITHUB_WORKSPACE/testBovadaFileAutoFetch"
-        Counter=$(($(ls "$DirectoryPath" | grep -c '^fetched_data_') + 1))
-        FileName="fetched_data_$Counter"
-
-        echo "$(<data.txt)" > "$DirectoryPath/$FileName"
+        curl -L https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl  > "$GITHUB_WORKSPACE/testBovadaFileAutoFetch/sang"        
 
     - name: Commit changes
       run: |
@@ -27,10 +20,10 @@ jobs:
         git config --local user.name "GitHub Actions"
 
         # Add the newly created file in the specified directory
-        git add "$DirectoryPath/$FileName"
+        git add "$GITHUB_WORKSPACE/testBovadaFileAutoFetch/sang"
 
         # Commit the changes
-        git commit -m "Add fetched data with counter $Counter" -a
+        git commit -m "Add fetched data with counter" -a
 
     - name: Push changes
       uses: ad-m/github-push-action@master
