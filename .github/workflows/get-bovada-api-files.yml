@@ -10,21 +10,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Fetch data from URL
-      run:  curl https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl -o testBovadaFileAutoFetch/sang2.json       
-    
+    - name: Fetch text from URL and save to file
+      run: |
+        curl -L https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl -o textfile.txt
+
+    - name: Display fetched text
+      run: cat textfile.txt
+
     - name: Commit changes
       run: |
-        git config --local user.email "actions@github.com"
-        git config --local user.name "GitHub Actions"
-
-        # Add the newly created file in the specified directory
-        git add testBovadaFileAutoFetch/sang2.json
-
-        # Commit the changes
-        git commit -m "Add fetched data with counter" -a
-
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add textfile.txt
+        git commit -m "Add text file"
+        git push
