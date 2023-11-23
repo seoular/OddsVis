@@ -11,7 +11,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Fetch data from URL
-      run:  curl https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl -o $GITHUB_WORKSPACE/testBovadaFileAutoFetch/sang2.json        
+      run:  curl https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl -o "{{$GITHUB_WORKSPACE}}/testBovadaFileAutoFetch/sang2.json"        
     
     - name: Commit changes
       run: |
