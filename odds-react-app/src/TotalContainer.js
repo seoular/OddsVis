@@ -507,7 +507,7 @@ function TotalContainer() {
       
       </div>
       <div class="updateTimeSection" >
-        EV values last updated Wednesday, 11/22 at 5:11pm ET
+        EV values last updated Thursday, 11/23 at 1:39am ET
       </div>
       <div class="patreonSection">
         <div>
