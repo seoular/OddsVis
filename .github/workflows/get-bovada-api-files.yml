@@ -12,7 +12,7 @@ jobs:
 
     - name: Fetch text from URL and save to file
       run: |
-        curl -L https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl -o nfl
+        curl -L https://www.bovada.lv/services/sports/event/v2/events/A/description/football/college-football -o nfl
 
     - name: Display fetched text
       run: cat nfl
