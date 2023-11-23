@@ -11,7 +11,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Fetch data from URL
-      run:  curl https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl -o "{{$GITHUB_WORKSPACE}}/testBovadaFileAutoFetch/sang2.json"        
+      run:  curl https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl -o testBovadaFileAutoFetch/sang2.json       
     
     - name: Commit changes
       run: |
@@ -19,7 +19,7 @@ jobs:
         git config --local user.name "GitHub Actions"
 
         # Add the newly created file in the specified directory
-        git add "$GITHUB_WORKSPACE/testBovadaFileAutoFetch/sang2.json"
+        git add testBovadaFileAutoFetch/sang2.json"
 
         # Commit the changes
         git commit -m "Add fetched data with counter" -a
