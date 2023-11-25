@@ -149,7 +149,7 @@ export default function SangTable(props) {
               {x.playerChange !== 0 ? 
                 <div
                     style={{
-                        marginTop: '2px',
+                        marginTop: '3px',
                         fontSize: 'small'
                     }}
                 
