@@ -391,7 +391,8 @@ const Positions = {
     ["Skyy Moore", Positions.WR],
     ["Clyde Edwards-Helaire", Positions.RB],
     ["Mecole Hardman", Positions.WR],
-    ["Noah Gray", Positions.TE]
+    ["Noah Gray", Positions.TE],
+    ["Kyren Williams", Positions.RB]
   
   
     // need to add chiefs and dolphins players / week 10 byes
