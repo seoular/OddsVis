@@ -403,9 +403,10 @@ function TotalContainer() {
     let finalList = Array.from(sortedMap.entries()).filter(
       (x) =>
         typeof PlayerPosMap.get(x[0]) !== "undefined" &&
-        (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
-        x[1] > 5
+        (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  
+        &&  x[1] > 1.88
     );
+
     let missingList = []
     if(pos == 0){
       finalList = finalList.filter((d) => {
@@ -451,6 +452,10 @@ function TotalContainer() {
         return flexHasAllValues
       })
     }
+
+    finalList = finalList.filter((elem) => {
+        return elem[1] > 5
+    })
   
     finalList = finalList.map((elem) => {
         return [elem[0], {
