@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { PlayerPosMap, slotcodes, UNIVERSAL_VIG } from "./constants";
 import SangTable from "./SangTable";
 import {isFetchable, getLastElementMap,calculateLatestChange} from './util';
+import MissingTable from './MissingTable';
 
 function TotalContainer() {
   const [selectedPosition, setSelectedPosition] = useState(0);
@@ -10,6 +11,7 @@ function TotalContainer() {
   const [playerMap, setPlayerMap] = useState(new Map())
   const [selectedMode, setSelectedMode] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(12);
+  const [playerMissingList, setPlayerMissingList] = useState([])
 
   // console.log(isFetchable('https://raw.githubusercontent.com/seoular/test/main/bovada5'))
 
@@ -141,6 +143,7 @@ function TotalContainer() {
               let amonRaFlag = false;
               for (let j = 0; j < eachGameTDOutcomes.length; j++) {
                 let playerOdds = eachGameTDOutcomes[j];
+              
 
                 if(playerOdds.description == 'Amon-Ra St.Brown'  || playerOdds.description == 'Amon-Ra St. Brown'){
                   playerOdds.description = 'Amon-Ra St. Brown'
@@ -148,9 +151,11 @@ function TotalContainer() {
                 playerOdds.description = playerOdds.description.replace(/\./g, '').replace(/ jr/i, '')
                 if (playerOdds.description == 'AJ Brown '){
                   playerOdds.description = playerOdds.description.slice(0, -1)
-                }                
-                
-                
+                }    
+                if (playerOdds.description == 'Gardner Minshew'){
+                    playerOdds.description = 'Gardner Minshew II'
+                }
+
                 if( !amonRaFlag ) { 
                   let newAnyTDList = []
                   if (playerToAnyTDDataPoints.has(playerOdds.description)) {
@@ -179,7 +184,6 @@ function TotalContainer() {
                 if (name == 'AJ Brown '){
                   name = name.slice(0, -1)
                 }
-
                 
                 if( !amonRaFlag ) {
         
@@ -240,7 +244,6 @@ function TotalContainer() {
                 if (name == 'AJ Brown '){
                   name = name.slice(0, -1)
                 }
-
                 if( !amonRaFlag ) {
 
  
@@ -403,19 +406,31 @@ function TotalContainer() {
         (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  &&
         x[1] > 5
     );
+    let missingList = []
     if(pos == 0){
       finalList = finalList.filter((d) => {
         let qbHasAllValues = playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToPassTD.has(d[0]) && playerToPassYds.has(d[0]) && playerToInts.has(d[0])
+        if(!qbHasAllValues){
+            missingList.push(d[0])
+        }
         return qbHasAllValues
       })
     } else if (pos == 1) {
       finalList = finalList.filter((d) => {
         let rbHasAllValues = playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0])
+        if(!rbHasAllValues){
+            missingList.push(d[0])
+        }
         return rbHasAllValues
       })
     } else if (pos == 2 || pos == 3) {
       finalList = finalList.filter((d) => {
+
         let WRHasAllValues = playerToAnyTD.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]) 
+        if(!WRHasAllValues){
+            missingList.push(d[0])
+        }
+       
         return WRHasAllValues
       })
     } else if (pos == 98) {
@@ -443,6 +458,7 @@ function TotalContainer() {
             change: finalCPlayer.get(elem[0])
         }]
     })
+    setPlayerMissingList(missingList)
     setPlayerList(finalList);
   };
 
@@ -509,6 +525,7 @@ function TotalContainer() {
       <div class="updateTimeSection" >
         EV values last updated Sunday, 11/25 at 3:42pm ET
       </div>
+      <MissingTable missingList={playerMissingList}/>
       <div class="patreonSection">
         <div>
           Access the Pro version with extra statistical insight and future functionality by supporting my Patreon link below
