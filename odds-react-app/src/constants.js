@@ -66,7 +66,7 @@ const Positions = {
     // ["Amon-Ra St Brown", Positions.WR],
     ["Josh Jacobs", Positions.RB],
     ["Garrett Wilson", Positions.WR],
-    ["Michael Pittman Jr", Positions.WR],
+    ["Michael Pittman", Positions.WR],
     ["Rhamondre Stevenson", Positions.RB],
     ["Alvin Kamara", Positions.RB],
     ["Derrick Henry", Positions.RB],
@@ -392,7 +392,8 @@ const Positions = {
     ["Clyde Edwards-Helaire", Positions.RB],
     ["Mecole Hardman", Positions.WR],
     ["Noah Gray", Positions.TE],
-    ["Kyren Williams", Positions.RB]
+    ["Kyren Williams", Positions.RB],
+    ["Gardner Minshew", Positions.QB]
   
   
     // need to add chiefs and dolphins players / week 10 byes
