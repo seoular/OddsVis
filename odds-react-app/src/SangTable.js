@@ -93,7 +93,7 @@ export default function SangTable(props) {
               style={{
                 backgroundColor: x.calculatedColor,
                 color: 
-                 x.percentile > 77.5 && x.percentile < 82 ? "lightgrey" : "white",
+                 x.percentile > 77 && x.percentile < 82 ? "lightgrey" : "white",
                 border: "1px solid " + x.calculatedColor,
                 borderRadius: "10px",
                 whiteSpace: "nowrap",
@@ -106,7 +106,7 @@ export default function SangTable(props) {
               style={{
                 backgroundColor: x.calculatedColor,
                 color: 
-                 x.percentile > 77.5 && x.percentile < 82 ? "lightgrey" : "white",
+                 x.percentile > 77 && x.percentile < 82 ? "lightgrey" : "white",
                 border: "1px solid " + x.calculatedColor,
                 borderRadius: "10px",
                 whiteSpace: "nowrap",
@@ -127,7 +127,7 @@ export default function SangTable(props) {
               style={{
                 backgroundColor: x.calculatedColor,
                 color: 
-                  x.percentile > 77.5 && x.percentile < 82 ? "lightgrey" : "white",
+                  x.percentile > 77 && x.percentile < 82 ? "lightgrey" : "white",
                 border: "1px solid " + x.calculatedColor,
                 borderRadius: "10px",
                 width: "100px"
@@ -167,7 +167,7 @@ export default function SangTable(props) {
                 <td
                   style={{
                     backgroundColor: x.calculatedColor,
-                    color: x.percentile > 77.5 && x.percentile < 82 ? "lightgrey" : "white",
+                    color: x.percentile > 77 && x.percentile < 82 ? "lightgrey" : "white",
                     border: "1px solid " + x.calculatedColor,
                     borderRadius: "10px",
                     width: "100px"
@@ -178,7 +178,7 @@ export default function SangTable(props) {
                 <td
                   style={{
                     backgroundColor: x.calculatedColor,
-                    color: x.percentile > 77.5 && x.percentile < 82 ? "lightgrey" : "white",
+                    color: x.percentile > 77 && x.percentile < 82 ? "lightgrey" : "white",
                     border: "1px solid " + x.calculatedColor,
                     borderRadius: "10px",
                     width: "100px"
