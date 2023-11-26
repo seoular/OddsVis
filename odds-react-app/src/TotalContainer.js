@@ -531,7 +531,7 @@ function TotalContainer() {
       
       </div>
       <div class="updateTimeSection" >
-        EV values last updated Saturday, 11/25 at 10:17pm ET
+        EV values last updated Sunday, 11/26 at 12:50pm ET
       </div>
       <MissingTable missingList={playerMissingList}/>
       <div class="patreonSection">
