@@ -411,9 +411,9 @@ function TotalContainer() {
     if(pos == 0){
       finalList = finalList.filter((d) => {
         let qbHasAllValues = playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToPassTD.has(d[0]) && playerToPassYds.has(d[0]) && playerToInts.has(d[0])
-        // if(d[0] == 'Gardner Minshew II'){
-        //     console.log(playerToAnyTD.has(d[0]) + ' ' +  playerToRushYds.has(d[0]) + playerToPassTD.has(d[0]) + playerToPassYds.has(d[0]) + playerToInts.has(d[0]))
-        // }
+        if(d[0] == 'Gardner Minshew II'){
+            console.log(playerToAnyTD.has(d[0]) + ' ' +  playerToRushYds.has(d[0]) + playerToPassTD.has(d[0]) + playerToPassYds.has(d[0]) + playerToInts.has(d[0]))
+        }
         if(!qbHasAllValues){
             missingList.push(d[0])
         }
@@ -531,7 +531,7 @@ function TotalContainer() {
       
       </div>
       <div class="updateTimeSection" >
-        EV values last updated Saturday, 11/25 at 5:27pm ET
+        EV values last updated Saturday, 11/25 at 7:15pm ET
       </div>
       <MissingTable missingList={playerMissingList}/>
       <div class="patreonSection">
