@@ -608,7 +608,7 @@ function TotalContainer() {
         <SangTable evList={playerList} espnPlayerMap={playerMap} />
       </div>
       <div class="updateTimeSection">
-        EV values last updated Sunday, 11/26 at 12:50pm ET
+        EV values last updated Thursday, 11/30 at 6:45pm ET
       </div>
       <MissingTable missingList={playerMissingList} />
       <div class="patreonSection">
