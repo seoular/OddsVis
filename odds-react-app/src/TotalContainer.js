@@ -2,23 +2,23 @@ import "./styles.css";
 import React, { useState, useEffect } from "react";
 import { PlayerPosMap, slotcodes, UNIVERSAL_VIG } from "./constants";
 import SangTable from "./SangTable";
-import {isFetchable, getLastElementMap,calculateLatestChange} from './util';
-import MissingTable from './MissingTable';
+import { isFetchable, getLastElementMap, calculateLatestChange } from "./util";
+import MissingTable from "./MissingTable";
 
 function TotalContainer() {
   const [selectedPosition, setSelectedPosition] = useState(0);
   const [playerList, setPlayerList] = useState([]);
-  const [playerMap, setPlayerMap] = useState(new Map())
+  const [playerMap, setPlayerMap] = useState(new Map());
   const [selectedMode, setSelectedMode] = useState(0);
-  const [selectedWeek, setSelectedWeek] = useState(12);
-  const [playerMissingList, setPlayerMissingList] = useState([])
+  const [selectedWeek, setSelectedWeek] = useState(13);
+  const [playerMissingList, setPlayerMissingList] = useState([]);
 
   // console.log(isFetchable('https://raw.githubusercontent.com/seoular/test/main/bovada5'))
 
   const scrapeEspnStats = async (week) => {
     //https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/995547?view=mMatchup&view=mMatchupScore
     const getUrl =
-      "https://raw.githubusercontent.com/seoular/OddsVis/main/ESPNAPIFiles/latestHppr"
+      "https://raw.githubusercontent.com/seoular/OddsVis/main/ESPNAPIFiles/latestHppr";
     // we may need to return to this but currently just use the latest one as it has past history as well
     //  "https://raw.githubusercontent.com/seoular/OddsVis/main/ESPNAPIFiles/week" + week + "hppr";
 
@@ -62,29 +62,25 @@ function TotalContainer() {
             data.push([week, tmid, name, slot, pos, inj, proj, act]);
             playerMap.set(name, {
               proj: proj?.toFixed(2),
-              act: act?.toFixed(2)
+              act: act?.toFixed(2),
             });
           }
         }
-
-      }).catch((e) => {
-        playerMap.clear()
+      })
+      .catch((e) => {
+        playerMap.clear();
       });
-    setPlayerMap(playerMap)
+    setPlayerMap(playerMap);
   };
 
   const scrapeData = async (pos, mode, week) => {
-    let receptionMultiplier = .5;
+    let receptionMultiplier = 0.5;
 
+    if (mode == 0) receptionMultiplier = 0.5;
+    else if (mode == 1) receptionMultiplier = 0;
+    else if (mode == 2) receptionMultiplier = 1;
 
-    if(mode == 0)
-      receptionMultiplier = .5;
-    else if(mode == 1)
-      receptionMultiplier = 0;
-    else if (mode == 2)
-      receptionMultiplier = 1;
-
-      //https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl
+    //https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl
 
     let testedInts = 0;
     let lastTestedInt = 0;
@@ -100,27 +96,31 @@ function TotalContainer() {
     let playerToPassYdsDataPoints = new Map();
     let playerToIntsDataPoints = new Map();
 
-    while(bovadaFileLoopFlag){
-      if(testedInts > lastTestedInt){
-        isNewBovadaFileCheck = true;        
+    while (bovadaFileLoopFlag) {
+      if (testedInts > lastTestedInt) {
+        isNewBovadaFileCheck = true;
         lastTestedInt++;
       }
-      await fetch('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
+      await fetch(
+        "https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week" +
+          week +
+          "" +
+          testedInts,
+      )
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-
           let allNflGames = data[0].events.slice();
-        //   console.log(allNflGames)
-          
+          //   console.log(allNflGames)
+
           for (let i = 0; i < allNflGames.length; i++) {
             let eachGameTDOutcomes = allNflGames[i].displayGroups
               .find((x) => x.id == "100-1870")
               ?.markets.find(
                 (y) =>
                   y.descriptionKey == "Anytime Touchdown Scorer" &&
-                  y.period.id == "119"
+                  y.period.id == "119",
               )?.outcomes;
             let eachGameRushingOutcomes = allNflGames[i].displayGroups
               .find((x) => x.id == "100-93")
@@ -144,33 +144,42 @@ function TotalContainer() {
               let amonRaFlag = false;
               for (let j = 0; j < eachGameTDOutcomes.length; j++) {
                 let playerOdds = eachGameTDOutcomes[j];
-              
 
-                if(playerOdds.description == 'Amon-Ra St.Brown'  || playerOdds.description == 'Amon-Ra St. Brown'){
-                  playerOdds.description = 'Amon-Ra St. Brown'
+                if (
+                  playerOdds.description == "Amon-Ra St.Brown" ||
+                  playerOdds.description == "Amon-Ra St. Brown"
+                ) {
+                  playerOdds.description = "Amon-Ra St. Brown";
                 }
-                playerOdds.description = playerOdds.description.replace(/\./g, '').replace(/ jr/i, '')
-                if (playerOdds.description == 'AJ Brown '){
-                  playerOdds.description = playerOdds.description.slice(0, -1)
-                }    
-                if (playerOdds.description == 'Gardner Minshew'){
-                    playerOdds.description = 'Gardner Minshew II'
+                playerOdds.description = playerOdds.description
+                  .replace(/\./g, "")
+                  .replace(/ jr/i, "");
+                if (playerOdds.description == "AJ Brown ") {
+                  playerOdds.description = playerOdds.description.slice(0, -1);
+                }
+                if (playerOdds.description == "Gardner Minshew") {
+                  playerOdds.description = "Gardner Minshew II";
                 }
 
-                if( !amonRaFlag ) { 
-                  let newAnyTDList = []
+                if (!amonRaFlag) {
+                  let newAnyTDList = [];
                   if (playerToAnyTDDataPoints.has(playerOdds.description)) {
-                    newAnyTDList = playerToAnyTDDataPoints.get(playerOdds.description).slice()
-                   
+                    newAnyTDList = playerToAnyTDDataPoints
+                      .get(playerOdds.description)
+                      .slice();
                   }
-                  newAnyTDList.push(((1 / playerOdds.price.decimal)/UNIVERSAL_VIG) * 6)
-                  playerToAnyTDDataPoints.set(playerOdds.description, newAnyTDList)
+                  newAnyTDList.push(
+                    (1 / playerOdds.price.decimal / UNIVERSAL_VIG) * 6,
+                  );
+                  playerToAnyTDDataPoints.set(
+                    playerOdds.description,
+                    newAnyTDList,
+                  );
                 }
 
-                if (name == 'Amon-Ra St. Brown'){
+                if (name == "Amon-Ra St. Brown") {
                   amonRaFlag = true;
                 }
-                
               }
             }
             if (typeof eachGameRushingOutcomes !== "undefined") {
@@ -178,27 +187,26 @@ function TotalContainer() {
               for (let j = 0; j < eachGameRushingOutcomes.length; j++) {
                 let playerOdds = eachGameRushingOutcomes[j];
                 let name = playerOdds.description.slice(22);
-                if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
-                  name = 'Amon-Ra St. Brown'
+                if (name == "Amon-Ra St.Brown" || name == "Amon-Ra St. Brown") {
+                  name = "Amon-Ra St. Brown";
                 }
-                name = name.replace(/\./g, '').replace(/ jr/i, '')
-                if (name == 'AJ Brown '){
-                  name = name.slice(0, -1)
+                name = name.replace(/\./g, "").replace(/ jr/i, "");
+                if (name == "AJ Brown ") {
+                  name = name.slice(0, -1);
                 }
 
                 // console.log(name)
-                if( !amonRaFlag ) {
-        
-                  let newRushYdsList = []
+                if (!amonRaFlag) {
+                  let newRushYdsList = [];
                   if (playerToRushYdsDataPoints.has(name)) {
-                    newRushYdsList = playerToRushYdsDataPoints.get(name)
+                    newRushYdsList = playerToRushYdsDataPoints.get(name);
                   }
-                  newRushYdsList.push(playerOdds.outcomes[0].price.handicap / 10)
-                  playerToRushYdsDataPoints.set(name, newRushYdsList)
-
-                  
+                  newRushYdsList.push(
+                    playerOdds.outcomes[0].price.handicap / 10,
+                  );
+                  playerToRushYdsDataPoints.set(name, newRushYdsList);
                 }
-                if (name == 'Amon-Ra St. Brown'){
+                if (name == "Amon-Ra St. Brown") {
                   amonRaFlag = true;
                 }
               }
@@ -208,27 +216,26 @@ function TotalContainer() {
               for (let j = 0; j < eachGameReceivingOutcomes.length; j++) {
                 let playerOdds = eachGameReceivingOutcomes[j];
                 let name = playerOdds.description.slice(24);
-                if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
-                  name = 'Amon-Ra St. Brown'
+                if (name == "Amon-Ra St.Brown" || name == "Amon-Ra St. Brown") {
+                  name = "Amon-Ra St. Brown";
                   // console.log(playerOdds.outcomes[0].price.handicap / 10)
                 }
-                name = name.replace(/\./g, '').replace(/ jr/i, '')
-                if (name == 'AJ Brown '){
-                  name = name.slice(0, -1)
+                name = name.replace(/\./g, "").replace(/ jr/i, "");
+                if (name == "AJ Brown ") {
+                  name = name.slice(0, -1);
                 }
 
-                if( !amonRaFlag ) {
-
-
-                  let newRecYdsList = []
+                if (!amonRaFlag) {
+                  let newRecYdsList = [];
                   if (playerToRecYdsDataPoints.has(name)) {
-                    newRecYdsList = playerToRecYdsDataPoints.get(name)
+                    newRecYdsList = playerToRecYdsDataPoints.get(name);
                   }
-                  newRecYdsList.push(playerOdds.outcomes[0].price.handicap / 10)
-                  playerToRecYdsDataPoints.set(name, newRecYdsList)
-
+                  newRecYdsList.push(
+                    playerOdds.outcomes[0].price.handicap / 10,
+                  );
+                  playerToRecYdsDataPoints.set(name, newRecYdsList);
                 }
-                if (name == 'Amon-Ra St. Brown'){
+                if (name == "Amon-Ra St. Brown") {
                   amonRaFlag = true;
                 }
               }
@@ -239,28 +246,28 @@ function TotalContainer() {
               for (let j = 0; j < eachGameReceptionOutcomes.length; j++) {
                 let playerOdds = eachGameReceptionOutcomes[j];
                 let name = playerOdds.description.slice(19);
-                if(name == 'Amon-Ra St.Brown'  || name == 'Amon-Ra St. Brown'){
-                  name = 'Amon-Ra St. Brown'
-                } 
-                name = name.replace(/\./g, '').replace(/ jr/i, '')
-                if (name == 'AJ Brown '){
-                  name = name.slice(0, -1)
+                if (name == "Amon-Ra St.Brown" || name == "Amon-Ra St. Brown") {
+                  name = "Amon-Ra St. Brown";
                 }
-                if( !amonRaFlag ) {
-
- 
-                  let newRecsList = []
+                name = name.replace(/\./g, "").replace(/ jr/i, "");
+                if (name == "AJ Brown ") {
+                  name = name.slice(0, -1);
+                }
+                if (!amonRaFlag) {
+                  let newRecsList = [];
                   if (playerToRecsDataPoints.has(name)) {
-                    newRecsList = playerToRecsDataPoints.get(name)
+                    newRecsList = playerToRecsDataPoints.get(name);
                   }
-                  let handicap = playerOdds.outcomes[0].price.handicap
-                  handicap = handicap - .5 + ((1 / playerOdds.outcomes[0].price.decimal) / UNIVERSAL_VIG)
-                  newRecsList.push(handicap * receptionMultiplier)
-                  playerToRecsDataPoints.set(name, newRecsList)
-
+                  let handicap = playerOdds.outcomes[0].price.handicap;
+                  handicap =
+                    handicap -
+                    0.5 +
+                    1 / playerOdds.outcomes[0].price.decimal / UNIVERSAL_VIG;
+                  newRecsList.push(handicap * receptionMultiplier);
+                  playerToRecsDataPoints.set(name, newRecsList);
                 }
 
-                if (name == 'Amon-Ra St. Brown'){                
+                if (name == "Amon-Ra St. Brown") {
                   amonRaFlag = true;
                 }
               }
@@ -269,75 +276,81 @@ function TotalContainer() {
               for (let j = 0; j < eachGamePassingYdOutcomes.length; j++) {
                 let playerOdds = eachGamePassingYdOutcomes[j];
                 let name = playerOdds.description.slice(22);
-                name = name.replace(/\./g, '').replace(/ jr/i, '')
-                if (name == 'AJ Brown '){
-                  name = name.slice(0, -1)
+                name = name.replace(/\./g, "").replace(/ jr/i, "");
+                if (name == "AJ Brown ") {
+                  name = name.slice(0, -1);
                 }
 
-
-
-                let newPassYdsList = []
+                let newPassYdsList = [];
                 if (playerToPassYdsDataPoints.has(name)) {
-                  newPassYdsList = playerToPassYdsDataPoints.get(name)
+                  newPassYdsList = playerToPassYdsDataPoints.get(name);
                 }
-                newPassYdsList.push(playerOdds.outcomes[0].price.handicap /25)
-                playerToPassYdsDataPoints.set(name, newPassYdsList)
-
+                newPassYdsList.push(playerOdds.outcomes[0].price.handicap / 25);
+                playerToPassYdsDataPoints.set(name, newPassYdsList);
               }
             }
             if (typeof eachGamePassingTDOutcomes !== "undefined") {
               for (let j = 0; j < eachGamePassingTDOutcomes.length; j++) {
                 let playerOdds = eachGamePassingTDOutcomes[j];
                 let name = playerOdds.description.slice(27);
-                name = name.replace(/\./g, '').replace(/ jr/i, '')
-                if (name == 'AJ Brown '){
-                  name = name.slice(0, -1)
+                name = name.replace(/\./g, "").replace(/ jr/i, "");
+                if (name == "AJ Brown ") {
+                  name = name.slice(0, -1);
                 }
 
-                let newPassTdsList = []
+                let newPassTdsList = [];
                 if (playerToPassTDDataPoints.has(name)) {
-                  newPassTdsList = playerToPassTDDataPoints.get(name)
+                  newPassTdsList = playerToPassTDDataPoints.get(name);
                 }
-                let handicap = playerOdds.outcomes[0].price.handicap
-                handicap = handicap - .5 + ((1 / playerOdds.outcomes[0].price.decimal) / UNIVERSAL_VIG)
-                newPassTdsList.push(handicap * 4)
-                playerToPassTDDataPoints.set(name, newPassTdsList)
-
+                let handicap = playerOdds.outcomes[0].price.handicap;
+                handicap =
+                  handicap -
+                  0.5 +
+                  1 / playerOdds.outcomes[0].price.decimal / UNIVERSAL_VIG;
+                newPassTdsList.push(handicap * 4);
+                playerToPassTDDataPoints.set(name, newPassTdsList);
               }
             }
             if (typeof eachGameIntOutcomes !== "undefined") {
               for (let j = 0; j < eachGameIntOutcomes.length; j++) {
                 let playerOdds = eachGameIntOutcomes[j];
                 let name = playerOdds.description.slice(29);
-                name = name.replace(/\./g, '').replace(/ jr/i, '')
-                if (name == 'AJ Brown '){
-                  name = name.slice(0, -1)
+                name = name.replace(/\./g, "").replace(/ jr/i, "");
+                if (name == "AJ Brown ") {
+                  name = name.slice(0, -1);
                 }
-               
-                let newIntsList = []
+
+                let newIntsList = [];
 
                 if (playerToIntsDataPoints.has(name)) {
-                  newIntsList = playerToIntsDataPoints.get(name)
+                  newIntsList = playerToIntsDataPoints.get(name);
                 }
-                let handicap = playerOdds.outcomes[0].price.handicap
-                handicap = handicap - .5 + ((1 / playerOdds.outcomes[0].price.decimal) / UNIVERSAL_VIG)
-                newIntsList.push(handicap *-2)
-                playerToIntsDataPoints.set(name, newIntsList)
-
+                let handicap = playerOdds.outcomes[0].price.handicap;
+                handicap =
+                  handicap -
+                  0.5 +
+                  1 / playerOdds.outcomes[0].price.decimal / UNIVERSAL_VIG;
+                newIntsList.push(handicap * -2);
+                playerToIntsDataPoints.set(name, newIntsList);
               }
             }
           }
-        }).catch((e) => {
+        })
+        .catch((e) => {
           // console.log('Index of page not factored in: ' + testedInts)
         });
-
 
       testedInts++;
       isNewBovadaFileCheck = false;
       // console.log('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
-      bovadaFileLoopFlag = await isFetchable('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
+      bovadaFileLoopFlag = await isFetchable(
+        "https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week" +
+          week +
+          "" +
+          testedInts,
+      );
     }
-    
+
     let playerToAnyTD = getLastElementMap(playerToAnyTDDataPoints);
     let playerToRushYds = getLastElementMap(playerToRushYdsDataPoints);
     let playerToRecYds = getLastElementMap(playerToRecYdsDataPoints);
@@ -346,58 +359,86 @@ function TotalContainer() {
     let playerToPassYds = getLastElementMap(playerToPassYdsDataPoints);
     let playerToInts = getLastElementMap(playerToIntsDataPoints);
 
-    let latestCPlayerToAnyTD = calculateLatestChange(playerToAnyTDDataPoints)
-    let latestCPlayerToRushYds = calculateLatestChange(playerToRushYdsDataPoints);
+    let latestCPlayerToAnyTD = calculateLatestChange(playerToAnyTDDataPoints);
+    let latestCPlayerToRushYds = calculateLatestChange(
+      playerToRushYdsDataPoints,
+    );
     let latestCPlayerToRecYds = calculateLatestChange(playerToRecYdsDataPoints);
     let latestCPlayerToRecs = calculateLatestChange(playerToRecsDataPoints);
     let latestCPlayerToPassTD = calculateLatestChange(playerToPassTDDataPoints);
-    let latestCPlayerToPassYds = calculateLatestChange(playerToPassYdsDataPoints);
+    let latestCPlayerToPassYds = calculateLatestChange(
+      playerToPassYdsDataPoints,
+    );
     let latestCPlayerToInts = calculateLatestChange(playerToIntsDataPoints);
 
-    let finalPlayerToEV = new Map()
-    let finalPlayerToDPCount = new Map()
-    let finalCPlayer = new Map()
-    function sumPlayerEVs(){
+    let finalPlayerToEV = new Map();
+    let finalPlayerToDPCount = new Map();
+    let finalCPlayer = new Map();
+    function sumPlayerEVs() {
       Array.from(arguments).forEach((arg) => {
         arg.forEach((value, key) => {
           let temp = value;
-          if(finalPlayerToEV.has(key)){
-            temp = finalPlayerToEV.get(key)
-            temp += value
+          if (finalPlayerToEV.has(key)) {
+            temp = finalPlayerToEV.get(key);
+            temp += value;
           }
-          finalPlayerToEV.set(key, temp)
-        })
-      })      
+          finalPlayerToEV.set(key, temp);
+        });
+      });
     }
-    function sumPlayerChanges(){
-        Array.from(arguments).forEach((arg) => {
-          arg.forEach((value, key) => {
-            let temp = value;
-            if(finalCPlayer.has(key)){
-              temp = finalCPlayer.get(key)
-              temp += value
-            }
-            finalCPlayer.set(key, temp)
-          })
-        })      
-      }
-    function sumPlayerDP(){
+    function sumPlayerChanges() {
+      Array.from(arguments).forEach((arg) => {
+        arg.forEach((value, key) => {
+          let temp = value;
+          if (finalCPlayer.has(key)) {
+            temp = finalCPlayer.get(key);
+            temp += value;
+          }
+          finalCPlayer.set(key, temp);
+        });
+      });
+    }
+    function sumPlayerDP() {
       Array.from(arguments).forEach((arg) => {
         arg.forEach((value, key) => {
           let temp = 1;
-          if(finalPlayerToDPCount.has(key)){
-            temp = finalPlayerToDPCount.get(key)
-            temp++
+          if (finalPlayerToDPCount.has(key)) {
+            temp = finalPlayerToDPCount.get(key);
+            temp++;
           }
-          finalPlayerToDPCount.set(key, temp)
-        })
-      })  
+          finalPlayerToDPCount.set(key, temp);
+        });
+      });
     }
-    sumPlayerEVs(playerToAnyTD, playerToRushYds, playerToRecYds, playerToRecs, playerToPassTD, playerToPassYds, playerToInts)
-    sumPlayerDP(playerToAnyTD, playerToRushYds, playerToRecYds, playerToRecs, playerToPassTD, playerToPassYds, playerToInts)
-    sumPlayerChanges(latestCPlayerToAnyTD, latestCPlayerToRushYds, latestCPlayerToRecYds, latestCPlayerToRecs, latestCPlayerToPassTD, latestCPlayerToPassYds, latestCPlayerToInts)
-    
-    const mapEntries = Array.from(finalPlayerToEV.entries());  
+    sumPlayerEVs(
+      playerToAnyTD,
+      playerToRushYds,
+      playerToRecYds,
+      playerToRecs,
+      playerToPassTD,
+      playerToPassYds,
+      playerToInts,
+    );
+    sumPlayerDP(
+      playerToAnyTD,
+      playerToRushYds,
+      playerToRecYds,
+      playerToRecs,
+      playerToPassTD,
+      playerToPassYds,
+      playerToInts,
+    );
+    sumPlayerChanges(
+      latestCPlayerToAnyTD,
+      latestCPlayerToRushYds,
+      latestCPlayerToRecYds,
+      latestCPlayerToRecs,
+      latestCPlayerToPassTD,
+      latestCPlayerToPassYds,
+      latestCPlayerToInts,
+    );
+
+    const mapEntries = Array.from(finalPlayerToEV.entries());
     // Sort the array based on the numeric value (assuming values are numbers)
     mapEntries.sort((a, b) => b[1] - a[1]);
     // Create a new Map from the sorted array
@@ -405,90 +446,127 @@ function TotalContainer() {
     let finalList = Array.from(sortedMap.entries()).filter(
       (x) =>
         typeof PlayerPosMap.get(x[0]) !== "undefined" &&
-        (PlayerPosMap.get(x[0]) == pos || pos == 99 || (pos == 98 && PlayerPosMap.get(x[0]) !== 0))  
-        &&  x[1] > 1.88
+        (PlayerPosMap.get(x[0]) == pos ||
+          pos == 99 ||
+          (pos == 98 && PlayerPosMap.get(x[0]) !== 0)) &&
+        x[1] > 1.88,
     );
 
-    let missingList = []
-    if(pos == 0){
+    let missingList = [];
+    if (pos == 0) {
       finalList = finalList.filter((d) => {
-        let qbHasAllValues = playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToPassTD.has(d[0]) && playerToPassYds.has(d[0]) && playerToInts.has(d[0])
+        let qbHasAllValues =
+          playerToAnyTD.has(d[0]) &&
+          playerToRushYds.has(d[0]) &&
+          playerToPassTD.has(d[0]) &&
+          playerToPassYds.has(d[0]) &&
+          playerToInts.has(d[0]);
 
-        if(!qbHasAllValues){
-            missingList.push(d[0])
+        if (!qbHasAllValues) {
+          missingList.push(d[0]);
         }
-        return qbHasAllValues
-      })
+        return qbHasAllValues;
+      });
     } else if (pos == 1) {
       finalList = finalList.filter((d) => {
-        let rbHasAllValues = playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0])
-        if(!rbHasAllValues){
-            missingList.push(d[0])
+        let rbHasAllValues =
+          playerToAnyTD.has(d[0]) &&
+          playerToRushYds.has(d[0]) &&
+          playerToRecYds.has(d[0]) &&
+          playerToRecs.has(d[0]);
+        if (!rbHasAllValues) {
+          missingList.push(d[0]);
         }
-        return rbHasAllValues
-      })
+        return rbHasAllValues;
+      });
     } else if (pos == 2 || pos == 3) {
       finalList = finalList.filter((d) => {
-
-        let WRHasAllValues = playerToAnyTD.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]) 
-        if(!WRHasAllValues){
-            missingList.push(d[0])
+        let WRHasAllValues =
+          playerToAnyTD.has(d[0]) &&
+          playerToRecYds.has(d[0]) &&
+          playerToRecs.has(d[0]);
+        if (!WRHasAllValues) {
+          missingList.push(d[0]);
         }
-       
-        return WRHasAllValues
-      })
+
+        return WRHasAllValues;
+      });
     } else if (pos == 98) {
       finalList = finalList.filter((d) => {
-        let flexHasAllValues = (playerToAnyTD.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]) 
-                                ||
-                                playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]))
-        return flexHasAllValues
-      })
+        let flexHasAllValues =
+          (playerToAnyTD.has(d[0]) &&
+            playerToRecYds.has(d[0]) &&
+            playerToRecs.has(d[0])) ||
+          (playerToAnyTD.has(d[0]) &&
+            playerToRushYds.has(d[0]) &&
+            playerToRecYds.has(d[0]) &&
+            playerToRecs.has(d[0]));
+        return flexHasAllValues;
+      });
     } else if (pos == 99) {
       finalList = finalList.filter((d) => {
-        let flexHasAllValues = (playerToAnyTD.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0]) 
-                                ||
-                                playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToRecYds.has(d[0]) && playerToRecs.has(d[0])
-                                ||
-                                playerToAnyTD.has(d[0]) && playerToRushYds.has(d[0]) && playerToPassTD.has(d[0]) && playerToPassYds.has(d[0]) && playerToInts.has(d[0]))
-        
-        return flexHasAllValues
-      })
+        let flexHasAllValues =
+          (playerToAnyTD.has(d[0]) &&
+            playerToRecYds.has(d[0]) &&
+            playerToRecs.has(d[0])) ||
+          (playerToAnyTD.has(d[0]) &&
+            playerToRushYds.has(d[0]) &&
+            playerToRecYds.has(d[0]) &&
+            playerToRecs.has(d[0])) ||
+          (playerToAnyTD.has(d[0]) &&
+            playerToRushYds.has(d[0]) &&
+            playerToPassTD.has(d[0]) &&
+            playerToPassYds.has(d[0]) &&
+            playerToInts.has(d[0]));
+
+        return flexHasAllValues;
+      });
     }
 
     finalList = finalList.filter((elem) => {
-        return elem[1] > 5
-    })
-  
+      return elem[1] > 5;
+    });
+
     finalList = finalList.map((elem) => {
-        return [elem[0], {
-            ev: elem[1],
-            change: finalCPlayer.get(elem[0])
-        }]
-    })
-    setPlayerMissingList(missingList)
+      return [
+        elem[0],
+        {
+          ev: elem[1],
+          change: finalCPlayer.get(elem[0]),
+        },
+      ];
+    });
+    setPlayerMissingList(missingList);
     setPlayerList(finalList);
   };
 
   useEffect(() => {
-    scrapeEspnStats(selectedWeek)
-  }, [selectedWeek])
+    scrapeEspnStats(selectedWeek);
+  }, [selectedWeek]);
   useEffect(() => {
-    scrapeData(selectedPosition, selectedMode, selectedWeek).catch(console.error);
-  }, [selectedPosition, selectedMode, selectedWeek]); 
-  
+    scrapeData(selectedPosition, selectedMode, selectedWeek).catch(
+      console.error,
+    );
+  }, [selectedPosition, selectedMode, selectedWeek]);
 
   const redirectToPatreon = () => {
-    window.location.href = 'https://www.patreon.com/evProjecter';
-  }
+    window.location.href = "https://www.patreon.com/evProjecter";
+  };
 
   return (
     <div>
-      <div>    
-        <div style={{display:'flex', marginLeft: '20px', marginBottom:'5px', marginTop:'15px'}}>           
-           Fantasy Football Projections Powered by Vegas Player Props
-        </div>   
-        <div style={{display:'flex'}}>
+      <div>
+        <div
+          style={{
+            display: "flex",
+            marginLeft: "20px",
+            marginBottom: "5px",
+            marginTop: "15px",
+          }}
+        >
+          Fantasy Football Projections Powered by Vegas Player Props
+        </div>
+        <div style={{ display: "flex" }}>
           <select
             defaultValue={selectedPosition}
             onChange={(e) => {
@@ -521,24 +599,31 @@ function TotalContainer() {
             }}
             style={{ display: "flex", marginLeft: "20px" }}
           >
+            <option value="13">Week 13</option>
             <option value="12">Week 12</option>
             <option value="11">Week 11</option>
             <option value="10">Week 10</option>
           </select>
         </div>
-        <SangTable  evList={playerList} espnPlayerMap={playerMap} />
-    
-      
+        <SangTable evList={playerList} espnPlayerMap={playerMap} />
       </div>
-      <div class="updateTimeSection" >
+      <div class="updateTimeSection">
         EV values last updated Sunday, 11/26 at 12:50pm ET
       </div>
-      <MissingTable missingList={playerMissingList}/>
+      <MissingTable missingList={playerMissingList} />
       <div class="patreonSection">
         <div>
-          Access the Pro version with extra statistical insight and future functionality by supporting my Patreon link below
+          Access the Pro version with extra statistical insight and future
+          functionality by supporting my Patreon link below
         </div>
-        <button class="button" onClick={(e) => {redirectToPatreon()}}><span>evProjecterPro</span></button>
+        <button
+          class="button"
+          onClick={(e) => {
+            redirectToPatreon();
+          }}
+        >
+          <span>evProjecterPro</span>
+        </button>
       </div>
     </div>
   );
