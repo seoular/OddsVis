@@ -11,6 +11,7 @@ function TotalContainer() {
   const [playerMap, setPlayerMap] = useState(new Map());
   const [selectedMode, setSelectedMode] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(13);
+  const [selectedTheme, setSelectedTheme] = useState(0);
   const [playerMissingList, setPlayerMissingList] = useState([]);
 
   // console.log(isFetchable('https://raw.githubusercontent.com/seoular/test/main/bovada5'))
@@ -604,13 +605,30 @@ function TotalContainer() {
             <option value="11">Week 11</option>
             <option value="10">Week 10</option>
           </select>
+          <select
+            defaultValue={selectedTheme}
+            onChange={(e) => {
+              setSelectedTheme(parseInt(e.target.value));
+            }}
+            style={{ display: "flex", marginLeft: "20px" }}
+          >
+            <option value="0">Color</option>
+            <option value="1">Silver</option>
+          </select>
         </div>
-        <SangTable evList={playerList} espnPlayerMap={playerMap} />
+        <SangTable
+          evList={playerList}
+          espnPlayerMap={playerMap}
+          selectedTheme={selectedTheme}
+        />
       </div>
       <div class="updateTimeSection">
         EV values last updated Thursday, 11/30 at 6:45pm ET
       </div>
-      <MissingTable missingList={playerMissingList} />
+      <MissingTable
+        selectedPosition={selectedPosition}
+        missingList={playerMissingList}
+      />
       <div class="patreonSection">
         <div>
           Access the Pro version with extra statistical insight and future
