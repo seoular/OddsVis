@@ -623,7 +623,7 @@ function TotalContainer() {
         />
       </div>
       <div class="updateTimeSection">
-        EV values last updated Thursday, 11/30 at 6:45pm ET
+        EV values last updated Friday, 11/31 at 8:54pm ET
       </div>
       <MissingTable
         selectedPosition={selectedPosition}
