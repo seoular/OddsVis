@@ -464,7 +464,23 @@ function TotalContainer() {
           playerToInts.has(d[0]);
 
         if (!qbHasAllValues) {
-          missingList.push(d[0]);
+          let qbMessage = "";
+          if (!playerToAnyTD.has(d[0])) {
+            qbMessage = qbMessage.concat(" AnyTD ");
+          }
+          if (!playerToRushYds.has(d[0])) {
+            qbMessage = qbMessage.concat(" RushYds ");
+          }
+          if (!playerToPassTD.has(d[0])) {
+            qbMessage = qbMessage.concat(" PassTDs ");
+          }
+          if (!playerToPassYds.has(d[0])) {
+            qbMessage = qbMessage.concat(" PassYds ");
+          }
+          if (!playerToInts.has(d[0])) {
+            qbMessage = qbMessage.concat(" Ints ");
+          }
+          missingList.push([d[0], qbMessage, d[1].toFixed(2)]);
         }
         return qbHasAllValues;
       });
@@ -476,7 +492,20 @@ function TotalContainer() {
           playerToRecYds.has(d[0]) &&
           playerToRecs.has(d[0]);
         if (!rbHasAllValues) {
-          missingList.push(d[0]);
+          let rbMessage = "";
+          if (!playerToAnyTD.has(d[0])) {
+            rbMessage = rbMessage.concat(" AnyTD ");
+          }
+          if (!playerToRushYds.has(d[0])) {
+            rbMessage = rbMessage.concat(" RushYds ");
+          }
+          if (!playerToRecYds.has(d[0])) {
+            rbMessage = rbMessage.concat(" RecTDs ");
+          }
+          if (!playerToRecs.has(d[0])) {
+            rbMessage = rbMessage.concat(" Recs ");
+          }
+          missingList.push([d[0], rbMessage, d[1].toFixed(2)]);
         }
         return rbHasAllValues;
       });
@@ -487,7 +516,17 @@ function TotalContainer() {
           playerToRecYds.has(d[0]) &&
           playerToRecs.has(d[0]);
         if (!WRHasAllValues) {
-          missingList.push(d[0]);
+          let wrteMessage = "";
+          if (!playerToAnyTD.has(d[0])) {
+            wrteMessage = wrteMessage.concat(" AnyTD ");
+          }
+          if (!playerToRecYds.has(d[0])) {
+            wrteMessage = wrteMessage.concat(" RecTDs ");
+          }
+          if (!playerToRecs.has(d[0])) {
+            wrteMessage = wrteMessage.concat(" Recs ");
+          }
+          missingList.push([d[0], wrteMessage, d[1].toFixed(2)]);
         }
 
         return WRHasAllValues;
