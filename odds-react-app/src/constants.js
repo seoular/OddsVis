@@ -394,6 +394,7 @@ export const PlayerPosMap = new Map([
   ["Noah Gray", Positions.TE],
   ["Kyren Williams", Positions.RB],
   ["Gardner Minshew", Positions.QB],
+  ["Derek Carr", Positions.QB],
 
   // need to add chiefs and dolphins players / week 10 byes
 ]);
