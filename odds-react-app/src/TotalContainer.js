@@ -14,8 +14,6 @@ function TotalContainer() {
   const [selectedTheme, setSelectedTheme] = useState(0);
   const [playerMissingList, setPlayerMissingList] = useState([]);
 
-  // console.log(isFetchable('https://raw.githubusercontent.com/seoular/test/main/bovada5'))
-
   const scrapeEspnStats = async (week) => {
     //https://fantasy.espn.com/apis/v3/games/ffl/seasons/2023/segments/0/leagues/995547?view=mMatchup&view=mMatchupScore
     const getUrl =
@@ -113,7 +111,6 @@ function TotalContainer() {
         })
         .then((data) => {
           let allNflGames = data[0].events.slice();
-          //   console.log(allNflGames)
 
           for (let i = 0; i < allNflGames.length; i++) {
             let eachGameTDOutcomes = allNflGames[i].displayGroups
@@ -161,6 +158,9 @@ function TotalContainer() {
                 if (playerOdds.description == "Gardner Minshew") {
                   playerOdds.description = "Gardner Minshew II";
                 }
+                if (playerOdds.description == "De'Von Achane") {
+                  playerOdds.description = "Devon Achane";
+                }
 
                 if (!amonRaFlag) {
                   let newAnyTDList = [];
@@ -196,7 +196,6 @@ function TotalContainer() {
                   name = name.slice(0, -1);
                 }
 
-                // console.log(name)
                 if (!amonRaFlag) {
                   let newRushYdsList = [];
                   if (playerToRushYdsDataPoints.has(name)) {
@@ -219,7 +218,6 @@ function TotalContainer() {
                 let name = playerOdds.description.slice(24);
                 if (name == "Amon-Ra St.Brown" || name == "Amon-Ra St. Brown") {
                   name = "Amon-Ra St. Brown";
-                  // console.log(playerOdds.outcomes[0].price.handicap / 10)
                 }
                 name = name.replace(/\./g, "").replace(/ jr/i, "");
                 if (name == "AJ Brown ") {
@@ -337,13 +335,10 @@ function TotalContainer() {
             }
           }
         })
-        .catch((e) => {
-          // console.log('Index of page not factored in: ' + testedInts)
-        });
+        .catch((e) => {});
 
       testedInts++;
       isNewBovadaFileCheck = false;
-      // console.log('https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week' + week + '' + testedInts)
       bovadaFileLoopFlag = await isFetchable(
         "https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week" +
           week +
