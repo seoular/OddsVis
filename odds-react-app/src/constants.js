@@ -200,7 +200,7 @@ export const PlayerPosMap = new Map([
   ["Zay Jones", Positions.WR],
   ["Allen Robinson", Positions.WR],
   ["Jamaal Williams", Positions.RB],
-  ["Juwan Johnson", Positions.WR],
+  ["Juwan Johnson", Positions.TE],
   ["Chris Moore", Positions.WR],
   ["Curtis Samuel", Positions.WR],
   ["Kylen Granson", Positions.TE],
