@@ -10,7 +10,7 @@ function TotalContainer() {
   const [playerList, setPlayerList] = useState([]);
   const [playerMap, setPlayerMap] = useState(new Map());
   const [selectedMode, setSelectedMode] = useState(0);
-  const [selectedWeek, setSelectedWeek] = useState(13);
+  const [selectedWeek, setSelectedWeek] = useState(14);
   const [selectedTheme, setSelectedTheme] = useState(0);
   const [playerMissingList, setPlayerMissingList] = useState([]);
 
@@ -104,7 +104,7 @@ function TotalContainer() {
         "https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week" +
           week +
           "" +
-          testedInts,
+          testedInts
       )
         .then((response) => {
           return response.json();
@@ -118,7 +118,7 @@ function TotalContainer() {
               ?.markets.find(
                 (y) =>
                   y.descriptionKey == "Anytime Touchdown Scorer" &&
-                  y.period.id == "119",
+                  y.period.id == "119"
               )?.outcomes;
             let eachGameRushingOutcomes = allNflGames[i].displayGroups
               .find((x) => x.id == "100-93")
@@ -170,11 +170,11 @@ function TotalContainer() {
                       .slice();
                   }
                   newAnyTDList.push(
-                    (1 / playerOdds.price.decimal / UNIVERSAL_VIG) * 6,
+                    (1 / playerOdds.price.decimal / UNIVERSAL_VIG) * 6
                   );
                   playerToAnyTDDataPoints.set(
                     playerOdds.description,
-                    newAnyTDList,
+                    newAnyTDList
                   );
                 }
 
@@ -202,7 +202,7 @@ function TotalContainer() {
                     newRushYdsList = playerToRushYdsDataPoints.get(name);
                   }
                   newRushYdsList.push(
-                    playerOdds.outcomes[0].price.handicap / 10,
+                    playerOdds.outcomes[0].price.handicap / 10
                   );
                   playerToRushYdsDataPoints.set(name, newRushYdsList);
                 }
@@ -230,7 +230,7 @@ function TotalContainer() {
                     newRecYdsList = playerToRecYdsDataPoints.get(name);
                   }
                   newRecYdsList.push(
-                    playerOdds.outcomes[0].price.handicap / 10,
+                    playerOdds.outcomes[0].price.handicap / 10
                   );
                   playerToRecYdsDataPoints.set(name, newRecYdsList);
                 }
@@ -343,7 +343,7 @@ function TotalContainer() {
         "https://raw.githubusercontent.com/seoular/OddsVis/main/BovadaAPIFiles/week" +
           week +
           "" +
-          testedInts,
+          testedInts
       );
     }
 
@@ -357,13 +357,13 @@ function TotalContainer() {
 
     let latestCPlayerToAnyTD = calculateLatestChange(playerToAnyTDDataPoints);
     let latestCPlayerToRushYds = calculateLatestChange(
-      playerToRushYdsDataPoints,
+      playerToRushYdsDataPoints
     );
     let latestCPlayerToRecYds = calculateLatestChange(playerToRecYdsDataPoints);
     let latestCPlayerToRecs = calculateLatestChange(playerToRecsDataPoints);
     let latestCPlayerToPassTD = calculateLatestChange(playerToPassTDDataPoints);
     let latestCPlayerToPassYds = calculateLatestChange(
-      playerToPassYdsDataPoints,
+      playerToPassYdsDataPoints
     );
     let latestCPlayerToInts = calculateLatestChange(playerToIntsDataPoints);
 
@@ -413,7 +413,7 @@ function TotalContainer() {
       playerToRecs,
       playerToPassTD,
       playerToPassYds,
-      playerToInts,
+      playerToInts
     );
     sumPlayerDP(
       playerToAnyTD,
@@ -422,7 +422,7 @@ function TotalContainer() {
       playerToRecs,
       playerToPassTD,
       playerToPassYds,
-      playerToInts,
+      playerToInts
     );
     sumPlayerChanges(
       latestCPlayerToAnyTD,
@@ -431,7 +431,7 @@ function TotalContainer() {
       latestCPlayerToRecs,
       latestCPlayerToPassTD,
       latestCPlayerToPassYds,
-      latestCPlayerToInts,
+      latestCPlayerToInts
     );
 
     const mapEntries = Array.from(finalPlayerToEV.entries());
@@ -445,7 +445,7 @@ function TotalContainer() {
         (PlayerPosMap.get(x[0]) == pos ||
           pos == 99 ||
           (pos == 98 && PlayerPosMap.get(x[0]) !== 0)) &&
-        x[1] > 1.88,
+        x[1] > 1.88
     );
 
     let missingList = [];
@@ -580,7 +580,7 @@ function TotalContainer() {
   }, [selectedWeek]);
   useEffect(() => {
     scrapeData(selectedPosition, selectedMode, selectedWeek).catch(
-      console.error,
+      console.error
     );
   }, [selectedPosition, selectedMode, selectedWeek]);
 
@@ -634,6 +634,7 @@ function TotalContainer() {
             }}
             style={{ display: "flex", marginLeft: "20px" }}
           >
+            <option value="14">Week 14</option>
             <option value="13">Week 13</option>
             <option value="12">Week 12</option>
             <option value="11">Week 11</option>
@@ -657,7 +658,7 @@ function TotalContainer() {
         />
       </div>
       <div class="updateTimeSection">
-        EV values last updated Sunday, 12/3 at 10:27am ET
+        EV values last updated Thursday, 12/7 at 5:29pm ET
       </div>
       <MissingTable
         selectedPosition={selectedPosition}
