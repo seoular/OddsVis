@@ -445,7 +445,7 @@ function TotalContainer() {
         (PlayerPosMap.get(x[0]) == pos ||
           pos == 99 ||
           (pos == 98 && PlayerPosMap.get(x[0]) !== 0)) &&
-        x[1] > 1.88
+        x[1] > 1.4
     );
 
     let missingList = [];
