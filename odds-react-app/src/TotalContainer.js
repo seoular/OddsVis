@@ -10,7 +10,7 @@ function TotalContainer() {
   const [playerList, setPlayerList] = useState([]);
   const [playerMap, setPlayerMap] = useState(new Map());
   const [selectedMode, setSelectedMode] = useState(0);
-  const [selectedWeek, setSelectedWeek] = useState(14);
+  const [selectedWeek, setSelectedWeek] = useState(15);
   const [selectedTheme, setSelectedTheme] = useState(0);
   const [playerMissingList, setPlayerMissingList] = useState([]);
 
@@ -445,7 +445,7 @@ function TotalContainer() {
         (PlayerPosMap.get(x[0]) == pos ||
           pos == 99 ||
           (pos == 98 && PlayerPosMap.get(x[0]) !== 0)) &&
-        x[1] > 1.4
+        x[1] > 1
     );
 
     let missingList = [];
@@ -634,6 +634,7 @@ function TotalContainer() {
             }}
             style={{ display: "flex", marginLeft: "20px" }}
           >
+            <option value="15">Week 15</option>
             <option value="14">Week 14</option>
             <option value="13">Week 13</option>
             <option value="12">Week 12</option>
@@ -658,7 +659,7 @@ function TotalContainer() {
         />
       </div>
       <div class="updateTimeSection">
-        EV values last updated Sunday, 12/10 at 12:36pm ET
+        EV values last updated Thursday, 12/14 at 3:19pm ET
       </div>
       <MissingTable
         selectedPosition={selectedPosition}
