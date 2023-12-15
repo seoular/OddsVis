@@ -495,7 +495,7 @@ function TotalContainer() {
             rbMessage = rbMessage.concat(" RushYds ");
           }
           if (!playerToRecYds.has(d[0])) {
-            rbMessage = rbMessage.concat(" RecTDs ");
+            rbMessage = rbMessage.concat(" RecYds ");
           }
           if (!playerToRecs.has(d[0])) {
             rbMessage = rbMessage.concat(" Recs ");
@@ -516,7 +516,7 @@ function TotalContainer() {
             wrteMessage = wrteMessage.concat(" AnyTD ");
           }
           if (!playerToRecYds.has(d[0])) {
-            wrteMessage = wrteMessage.concat(" RecTDs ");
+            wrteMessage = wrteMessage.concat(" RecYds ");
           }
           if (!playerToRecs.has(d[0])) {
             wrteMessage = wrteMessage.concat(" Recs ");
@@ -668,7 +668,7 @@ function TotalContainer() {
       <div class="patreonSection">
         <div>
           Access the Pro version with extra statistical insight and future
-          functionality by supporting my Patreon link below
+          functionality by supporting my Patreon link below.
         </div>
         <button
           class="button"
