@@ -41,7 +41,12 @@ export default function SangTable(props) {
     if (!clickedList.find((c) => c.playerName == player.playerName)) {
       newList.push(player);
     } else {
-      const index = clickedList.indexOf(player);
+      let index = -1;
+      for (let i = 0; i < newList.length; i++) {
+        if (newList[i].playerName === player.playerName) {
+          index = i; // Return the index if the property value matches
+        }
+      }
       newList.splice(index, 1);
     }
     setClickedList(newList);
