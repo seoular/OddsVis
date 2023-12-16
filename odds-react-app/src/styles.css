@@ -3,6 +3,13 @@
   text-align: center;
 }
 
+.new-feature-message {
+  color: limegreen;
+  text-align: left;
+  font-size: 0.9rem;
+  margin-top: 20px;
+  font-weight: bold;
+}
 .ClickedPlayerTotalTable {
   margin-top: 20px;
 }
@@ -17,10 +24,9 @@
 }
 
 .select-player-message {
-  width: 350px;
-  margin-left: 32px;
+  text-align: left;
+  /* margin-left: 32px; */
   font-size: 0.9rem;
-  margin-top: 20px;
   font-weight: bold;
 }
 .patreonSection {
