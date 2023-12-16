@@ -3,26 +3,30 @@
   text-align: center;
 }
 
-.SangTable{
-  margin-top: 5px;
+.ClickedPlayerTotalTable {
+  margin-top: 10px;
 }
-.updateTimeSection{  
+.SangTable {
+  margin-top: 5px;
+  /* display: inline-flex; */
+}
+.updateTimeSection {
   width: 350px;
   margin-left: 32px;
-  font-size: .82rem;
+  font-size: 0.82rem;
 }
-.patreonSection{
+.patreonSection {
   margin-top: 42px;
   width: 350px;
   margin-left: 32px;
-  font-size: .82rem;
+  font-size: 0.82rem;
 }
 
 .button {
   border-radius: 10px;
   background-color: #f4511e;
   border: none;
-  color: #FFFFFF;
+  color: #ffffff;
   text-align: center;
   font-size: 28px;
   padding: 20px;
@@ -40,7 +44,7 @@
 }
 
 .button span:after {
-  content: '\00bb';
+  content: "\00bb";
   position: absolute;
   opacity: 0;
   top: 0;
@@ -57,18 +61,18 @@
   right: 0;
 }
 
-.invis-mobile{
-  display: none
+.invis-mobile {
+  display: none;
 }
 
-.invis-mobile-header{
-  display: none
+.invis-mobile-header {
+  display: none;
 }
 @media screen and (min-width: 480px) {
-  .invis-mobile-header{
+  .invis-mobile-header {
     display: table-cell;
   }
-  .invis-mobile{
+  .invis-mobile {
     display: block;
   }
 }
