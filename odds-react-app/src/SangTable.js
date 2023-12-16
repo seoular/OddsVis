@@ -312,8 +312,11 @@ export default function SangTable(props) {
       <div class="updateTimeSection">
         EV values last updated Friday, 12/15 at 3:48pm ET
       </div>
+      <div className="new-feature-message">
+        New feature - Player Selector Table
+      </div>
       <div class="select-player-message">
-        Select players by clicking their name
+        Add or remove players from the table below by clicking on their name
       </div>
 
       <ClickedPlayerTotalTable
