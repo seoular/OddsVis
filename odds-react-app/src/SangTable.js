@@ -113,7 +113,7 @@ export default function SangTable(props) {
           >
             Δ
           </th>
-          {getQueryStringValue("isPro") == "thanksdude" ? (
+          {getQueryStringValue("isPro") == "thanksdudes" ? (
             <>
               <th
                 style={{
@@ -259,7 +259,7 @@ export default function SangTable(props) {
               )}
             </td>
             {/* {true ?  */}
-            {getQueryStringValue("isPro") == "thanksdude" ? (
+            {getQueryStringValue("isPro") == "thanksdudes" ? (
               <>
                 <td
                   style={
