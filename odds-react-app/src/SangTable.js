@@ -318,7 +318,7 @@ export default function SangTable(props) {
         EV values last updated Thursday, 12/21 at 3:57pm ET
       </div>
       <div className="new-feature-message">
-        New feature - Player Selector Table
+        Player Selector Table
       </div>
       <div class="select-player-message">
         Add or remove players from the table below by clicking on their name
