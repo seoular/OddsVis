@@ -31,6 +31,7 @@ export const slotcodes = {
   // Add more mappings as needed based on your specific data structure
 };
 export const PlayerPosMap = new Map([
+  ["Joshua Palmer", Positions.WR],
   ["Joe Flacco", Positions.QB],
   ["Jake Browning", Positions.QB],
   ["Desmond Ridder", Positions.QB],
