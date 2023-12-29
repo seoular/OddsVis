@@ -669,7 +669,7 @@ function TotalContainer() {
       </div>
       <div style={{ textAlign: "left" }}>
         <img src="https://i.imgur.com/Q2v8f1O.png" width="200" height="200" />
-        <img src="https://i.imgur.com/bnj4Ee1.png" width="200" height="200" />
+        <img src="https://i.imgur.com/8LJtxdF.png" width="200" height="200" />
       </div>
       <div class="patreonSection">
         <form
