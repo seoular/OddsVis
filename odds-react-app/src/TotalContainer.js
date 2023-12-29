@@ -711,6 +711,24 @@ function TotalContainer() {
           />
         </form>
       </div>
+      <div style={{ textAlign: "left", marginTop: "20px", width: "480px" }}>
+        Learn about the development of this site through React by checking out
+        the source code at{" "}
+        <a
+          href={"https://github.com/seoular/OddsVis"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {"https://github.com/seoular/OddsVis"}
+        </a>
+        . If you spend the time, you can learn how React Effects dictate the
+        state of this site.{" "}
+      </div>
+      <div className="new-feature-message">Shameless plug:</div>
+      <div style={{ textAlign: "left", width: "480px" }}>
+        If you enjoyed using this tool this season but don't want a sexy
+        coaster, hook me up with a beer by Venmo'ing @sanghan
+      </div>
     </div>
   );
 }
