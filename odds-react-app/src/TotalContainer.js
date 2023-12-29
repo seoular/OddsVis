@@ -664,7 +664,15 @@ function TotalContainer() {
         selectedPosition={selectedPosition}
         missingList={playerMissingList}
       />
-      <div style={{ textAlign: "left", marginTop: "20px", marginLeft: "90px" }}>
+      <div
+        style={{
+          textAlign: "left",
+          marginTop: "20px",
+          marginLeft: "90px",
+          color: "orange",
+          fontWeight: "500",
+        }}
+      >
         Get your custom coasters here!
       </div>
       <div style={{ textAlign: "left" }}>
