@@ -315,7 +315,7 @@ export default function SangTable(props) {
         ))}
       </table>
       <div class="updateTimeSection">
-        EV values last updated Thursday, 12/28 at 3:16pm ET
+        EV values last updated Friday, 12/29 at 2:40pm ET
       </div>
       <div className="new-feature-message">
         Player Selector Table
