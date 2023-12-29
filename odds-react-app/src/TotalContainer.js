@@ -678,7 +678,7 @@ function TotalContainer() {
           target="_top"
         >
           <input type="hidden" name="cmd" value="_s-xclick" />
-          <input type="hidden" name="hosted_button_id" value="59UEJVKKA2PE6" />
+          <input type="hidden" name="hosted_button_id" value="475Y28RD6BT7E" />
           <table>
             <tr>
               <td>
@@ -695,6 +695,20 @@ function TotalContainer() {
                 <select name="os0">
                   <option value="Light of Eärendil">Light of Eärendil</option>
                   <option value="Fantasy Champion">Fantasy Champion</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="hidden" name="on1" value="Material" />
+                Material
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select name="os1">
+                  <option value="Cork">Cork</option>
+                  <option value="Paper/Pulpboard">Paper/Pulpboard</option>
                 </select>
               </td>
             </tr>
