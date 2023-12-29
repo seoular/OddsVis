@@ -664,19 +664,52 @@ function TotalContainer() {
         selectedPosition={selectedPosition}
         missingList={playerMissingList}
       />
+      <div style={{ textAlign: "left", marginTop: "20px", marginLeft: "90px" }}>
+        Get your custom coasters here!
+      </div>
+      <div style={{ textAlign: "left" }}>
+        <img src="https://i.imgur.com/Q2v8f1O.png" width="200" height="200" />
+        <img src="https://i.imgur.com/bnj4Ee1.png" width="200" height="200" />
+      </div>
       <div class="patreonSection">
-        <div>
-          Access the Pro version with extra statistical insight and future
-          functionality by supporting my Patreon link below.
-        </div>
-        <button
-          class="button"
-          onClick={(e) => {
-            redirectToPatreon();
-          }}
+        <form
+          action="https://www.paypal.com/cgi-bin/webscr"
+          method="post"
+          target="_top"
         >
-          <span>evProjecterPro</span>
-        </button>
+          <input type="hidden" name="cmd" value="_s-xclick" />
+          <input type="hidden" name="hosted_button_id" value="59UEJVKKA2PE6" />
+          <table>
+            <tr>
+              <td>
+                <input
+                  type="hidden"
+                  name="on0"
+                  value="Custom Coaster Options"
+                />
+                Custom Coaster Options
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select name="os0">
+                  <option value="Light of Eärendil">Light of Eärendil</option>
+                  <option value="Fantasy Champion">Fantasy Champion</option>
+                </select>
+              </td>
+            </tr>
+          </table>
+          <input type="hidden" name="currency_code" value="USD" />
+          <input
+            style={{ marginRight: "200px" }}
+            type="image"
+            src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_SM.gif"
+            border="0"
+            name="submit"
+            title="PayPal - The safer, easier way to pay online!"
+            alt="Buy Now"
+          />
+        </form>
       </div>
     </div>
   );
